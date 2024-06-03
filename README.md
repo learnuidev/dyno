@@ -28,3 +28,9 @@ pnpm dev
 # or
 bun dev
 ```
+
+## Features
+
+1. Dynolog
+2. ETL
+3. Integrations (google spreadsheet, airtable)

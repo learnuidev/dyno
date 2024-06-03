@@ -1,22 +1,21 @@
 // import { verifyJwt } from "@/libs/cognito/jwt";
-import { listTables } from "@/libs/dynamodb/list-tables";
+import { scan } from "@/libs/dynamodb/scan";
 
 import { headers } from "next/headers";
 
 export const maxDuration = 60;
-// export const runtime = "edge";
 
 export async function POST(req: Request) {
-  const { tableName } = await req.json();
+  const { TableName } = await req.json();
 
   const headersApi = headers();
 
-  // const jwtToken = headersApi.get("authorization") || "";
+  const jwtToken = headersApi.get("authorization") || "";
   //   const isVerified = await verifyJwt(jwtToken, { isAdmin: true });
   const isVerified = true;
 
   if (isVerified) {
-    const resp = await listTables();
+    const resp = await scan({ TableName: TableName }, { transform: true });
     return Response.json(resp);
   } else {
     return Response.json({

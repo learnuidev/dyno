@@ -1,9 +1,10 @@
 "use client";
-// import { ListTablesResponse } from "@/libs/dynamodb/list-tables";
+
 import { useState } from "react";
 import { SelectedTable } from "./selected-table";
 import { useQuery } from "@tanstack/react-query";
 import { ListTablesResponse } from "@/libs/dynamodb/list-tables";
+import { FilterTablesInput } from "./filter-tables-input";
 
 export const formatTableName = (tableName: string) => {
   return tableName?.split("-")[3] === undefined
@@ -39,12 +40,10 @@ const useListTables = () => {
 export default function TablesList() {
   const { data: tables } = useListTables();
   const [selectedTable, setSelectedTable] = useState("");
+  const [query, setQuery] = useState("");
 
   const addSelectedTable = (table: string) => {
     setSelectedTable(table);
-  };
-  const removeSelectedTable = () => {
-    setSelectedTable("");
   };
 
   if (selectedTable) {
@@ -55,29 +54,41 @@ export default function TablesList() {
     );
   }
 
+  const filteredTableNames = tables?.TableNames?.filter((name) => {
+    if (!query) {
+      return false;
+    }
+    return name?.toLowerCase()?.includes(query?.toLowerCase());
+  });
+
   return (
     <main className="dark:bg-black dark:text-white h-screen overflow-y-auto">
-      <div className="pt-32 pb-24 text-center">
-        <h1 className="text-7xl">dyno</h1>
-        <h1 className="text-3xl mt-8 font-extralight text-gray-400">
+      <div className="pt-32 pb-12 text-center">
+        <h1 className="text-5xl md:text-7xl font-bold">dyno</h1>
+        <h1 className="text-xl md:text-3xl mx-8 mt-4 md:mt-8 font-extralight text-gray-400">
           delightful dynamodb client from the future
         </h1>
       </div>
 
+      <section className="flex w-full">
+        <FilterTablesInput query={query} setQuery={setQuery} />
+      </section>
+
       <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
-        {tables?.TableNames?.map((tableName: string) => {
+        {filteredTableNames?.map((tableName: string) => {
           return (
-            <button
-              className="p-4 text-2xl hover:scale-110 transition"
-              onClick={() => {
-                console.log("TODO");
-                // alert("TODO");
-                addSelectedTable(tableName);
-              }}
-              key={tableName}
-            >
-              {formatTableName(tableName)}
-            </button>
+            <div key={tableName} className="p-4 flex items-center flex-col">
+              <button
+                className="text-2xl hover:scale-110 transition"
+                onClick={() => {
+                  addSelectedTable(tableName);
+                }}
+              >
+                <span>{formatTableName(tableName)}</span>
+              </button>
+
+              <p className="text-[10px] text-gray-400">{tableName}</p>
+            </div>
           );
         })}
       </section>

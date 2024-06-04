@@ -21,11 +21,23 @@ export const TableInfo = ({ selectedTable }: { selectedTable: string }) => {
 
         <div>
           <h4 className="text-gray-500">{tableInfo?.Table?.TableStatus}</h4>
-          <h3 className="text-xl font-extralight text-gray-400 my-2">
-            {bytesToMB(tableInfo?.Table?.TableSizeBytes || 0)?.toFixed(1)} MB
-          </h3>
+          <div className="flex space-x-2 items-center">
+            <h3 className="font-extralight text-gray-400">
+              {bytesToMB(tableInfo?.Table?.TableSizeBytes || 0)?.toFixed(1)} MB
+            </h3>
+
+            <p> | </p>
+
+            <h5 className="font-extralight text-gray-400">
+              {tableInfo?.Table?.ItemCount} items
+            </h5>
+          </div>
         </div>
       </div>
+
+      {/* <code>
+        <pre>{JSON.stringify(tableInfo, null, 2)}</pre>
+      </code> */}
     </section>
   );
 };

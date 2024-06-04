@@ -5,7 +5,7 @@ import { SelectedTable } from "./selected-table";
 import { useQuery } from "@tanstack/react-query";
 import { ListTablesResponse } from "@/libs/dynamodb/list-tables";
 
-const formatTableName = (tableName: string) => {
+export const formatTableName = (tableName: string) => {
   return tableName?.split("-")[3] === undefined
     ? tableName
     : tableName?.split("-")[3]?.split("Table")[0] === undefined
@@ -48,26 +48,39 @@ export default function TablesList() {
   };
 
   if (selectedTable) {
-    return <SelectedTable selectedTable={selectedTable} />;
+    return (
+      <main className="dark:bg-black dark:text-white">
+        <SelectedTable selectedTable={selectedTable} />
+      </main>
+    );
   }
 
   return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 mt-8">
-      {tables?.TableNames?.map((tableName: string) => {
-        return (
-          <button
-            className="p-4 text-2xl hover:scale-110 transition"
-            onClick={() => {
-              console.log("TODO");
-              // alert("TODO");
-              addSelectedTable(tableName);
-            }}
-            key={tableName}
-          >
-            {formatTableName(tableName)}
-          </button>
-        );
-      })}
-    </section>
+    <main className="dark:bg-black dark:text-white">
+      <div className="pt-32 pb-24 text-center">
+        <h1 className="text-7xl">dyno</h1>
+        <h1 className="text-3xl mt-8 font-extralight text-gray-400">
+          dynamodb client from the future
+        </h1>
+      </div>
+
+      <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
+        {tables?.TableNames?.map((tableName: string) => {
+          return (
+            <button
+              className="p-4 text-2xl hover:scale-110 transition"
+              onClick={() => {
+                console.log("TODO");
+                // alert("TODO");
+                addSelectedTable(tableName);
+              }}
+              key={tableName}
+            >
+              {formatTableName(tableName)}
+            </button>
+          );
+        })}
+      </section>
+    </main>
   );
 }

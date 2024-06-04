@@ -25,8 +25,10 @@ export const TableData = ({ selectedTable }: { selectedTable: string }) => {
   const { data: scannedData } = useDynamoDBScan({ TableName: selectedTable });
 
   return (
-    <code>
-      <pre>{JSON.stringify(scannedData, null, 2)}</pre>
-    </code>
+    <section className="h-screen overflow-y-auto">
+      <code className="overflow-y-auto">
+        <pre>{JSON.stringify(scannedData?.Items, null, 2)}</pre>
+      </code>
+    </section>
   );
 };

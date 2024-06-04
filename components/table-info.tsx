@@ -1,5 +1,5 @@
-import { formatTableName } from "./tables-list";
 import { useDescribeTable } from "@/hooks/use-describe-table";
+import { formatTableName } from "@/lib/utils";
 
 const bytesToMB = (byte: number) => byte * 0.000001;
 

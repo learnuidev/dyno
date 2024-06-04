@@ -6,14 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ListTablesResponse } from "@/libs/dynamodb/list-tables";
 import { FilterTablesInput } from "./filter-tables-input";
 import { DynoBanner } from "./dyno-banner";
-
-export const formatTableName = (tableName: string) => {
-  return tableName?.split("-")[3] === undefined
-    ? tableName
-    : tableName?.split("-")[3]?.split("Table")[0] === undefined
-      ? tableName
-      : `${tableName?.split("-")[3]?.split("Table")[0]} Table`;
-};
+import { TableItem } from "./table-item";
 
 const useListTables = () => {
   // const { data: authUser } = useCurrentAuthUser({});
@@ -73,18 +66,11 @@ export default function TablesList() {
       <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
         {filteredTableNames?.map((tableName: string) => {
           return (
-            <div key={tableName} className="p-4 flex items-center flex-col">
-              <button
-                className="text-2xl hover:scale-110 transition"
-                onClick={() => {
-                  addSelectedTable(tableName);
-                }}
-              >
-                <span>{formatTableName(tableName)}</span>
-              </button>
-
-              <p className="text-[10px] text-gray-400">{tableName}</p>
-            </div>
+            <TableItem
+              key={tableName}
+              tableName={tableName}
+              addSelectedTable={addSelectedTable}
+            />
           );
         })}
       </section>

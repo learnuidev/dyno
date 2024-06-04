@@ -91,8 +91,50 @@ const renderSubComponent = ({ row }: { row: Row<User> }) => {
 };
 
 export function DynamoDBTableV3(props: any) {
-  const { items } = props;
+  const [attribute, setAttribute] = useState("group");
+  const [predicate, setPredicate] = useState("inc");
+  const [value, setValue] = useState("neng");
+  //   const { items } = props;
+
+  const [items, setItems] = useState(props.items?.slice(0, 200));
   const [activeData, setActiveData] = React.useState(null);
+
+  const runSearch = () => {
+    const newItems = props?.items?.filter((item: any) => {
+      const itemVal = item?.[attribute] as any;
+
+      if (["contains", "cont", "inc", "includes"]?.includes(predicate)) {
+        return itemVal?.includes(value);
+      }
+
+      if (["eq", "equals", "="]?.includes(predicate)) {
+        return itemVal === value;
+      }
+      if (["neq", "not equals", "not="]?.includes(predicate)) {
+        return itemVal !== value;
+      }
+      if (["<", "lt"]?.includes(predicate)) {
+        return parseInt(itemVal) < parseInt(value);
+      }
+      if (["<=", "lte"]?.includes(predicate)) {
+        return parseInt(itemVal) <= parseInt(value);
+      }
+      if ([">", "gt"]?.includes(predicate)) {
+        return parseInt(itemVal) > parseInt(value);
+      }
+      if ([">=", "gte"]?.includes(predicate)) {
+        return parseInt(itemVal) >= parseInt(value);
+      }
+
+      return false;
+    });
+
+    setItems(newItems);
+  };
+
+  const clearSearch = () => {
+    setItems(props?.items);
+  };
 
   const titles = [
     ...(new Set(items.map((item: any) => Object.keys(item)).flat()) as any),
@@ -232,6 +274,35 @@ export function DynamoDBTableV3(props: any) {
 
   return (
     <div className="mx-4">
+      <div className="mb-4 space-x-4">
+        <input
+          value={attribute}
+          onChange={(e) => {
+            setAttribute(e.target.value);
+          }}
+          placeholder="attribute"
+          className="h-10 px-2"
+        />
+        <input
+          placeholder="predicate"
+          value={predicate}
+          onChange={(e) => {
+            setPredicate(e.target.value);
+          }}
+          className="h-10 px-2"
+        />
+        <input
+          placeholder="value"
+          className="h-10 px-2"
+          value={value}
+          onChange={(e) => {
+            setValue(e.target.value);
+          }}
+        />
+
+        <button onClick={runSearch}>Run ⌘</button>
+        <button onClick={clearSearch}>Clear</button>
+      </div>
       <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
         <table
           {...{

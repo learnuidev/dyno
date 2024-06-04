@@ -95,7 +95,7 @@ export function DynamoDBTableV3(props: any) {
   const [activeData, setActiveData] = React.useState(null);
 
   const titles = [
-    ...(new Set(...items.map((item: any) => Object.keys(item))) as any),
+    ...(new Set(items.map((item: any) => Object.keys(item)).flat()) as any),
   ];
 
   function MyCell(props: any) {

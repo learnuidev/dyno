@@ -24,7 +24,7 @@ export const FilterTablesInput = ({
           // 4. Shadow
           "focus:shadow-sm focus:shadow-rose-400 transition"
         )}
-        placeholder="search tables"
+        placeholder="ask anything..."
       />
     </div>
   );

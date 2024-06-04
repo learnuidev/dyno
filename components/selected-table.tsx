@@ -23,14 +23,12 @@ export const SelectedTable = ({ selectedTable }: { selectedTable: string }) => {
               {/* <Icons.table className="text-2xl" /> */}
             </TabsTrigger>
           </TabsList>
-
-          <div className="space-x-4"></div>
         </div>
 
         <TabsContent value="info" className="py-8">
           <TableInfo selectedTable={selectedTable} />
         </TabsContent>
-        <TabsContent value="table" className="py-8">
+        <TabsContent value="table" className="h-screen">
           <TableData selectedTable={selectedTable} />
         </TabsContent>
       </Tabs>

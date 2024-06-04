@@ -232,7 +232,7 @@ export function DynamoDBTableV3(props: any) {
 
   return (
     <div className="mx-4">
-      <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-4">
+      <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
         <table
           {...{
             className:
@@ -303,6 +303,15 @@ export function DynamoDBTableV3(props: any) {
                         ).props.getValue()
                       );
 
+                      const originalVal = cell.row.original;
+
+                      const stringifiedCellValue = JSON.stringify(val);
+
+                      const cellValueFormatted =
+                        stringifiedCellValue?.length > 54
+                          ? `${stringifiedCellValue?.slice(0, 54)}...`
+                          : stringifiedCellValue;
+
                       return (
                         //   eslint-disable-next-line
                         <td
@@ -314,12 +323,17 @@ export function DynamoDBTableV3(props: any) {
                               width: cell.column.getSize(),
                             },
                           }}
+                          onClick={() => {
+                            console.log(originalVal);
+                            alert(JSON.stringify(originalVal));
+                          }}
                         >
                           {/* {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                           )} */}
-                          {JSON.stringify(val)?.slice(0, 32)}
+                          {/* {JSON.stringify(val)?.slice(0, 54)} */}
+                          {cellValueFormatted}
                         </td>
                       );
                     })}
@@ -382,7 +396,15 @@ export function DynamoDBTable(props: any) {
   }
 
   if (!Items.length || !keyAttribute) {
-    return <div> Nothing here </div>;
+    return (
+      <div className="text-center pt-32">
+        <h2 className="text-3xl"> Nothing here </h2>
+
+        <p className="text-xl text-gray-400 font-extralight mt-4">
+          Please select a different table and try again
+        </p>
+      </div>
+    );
   }
 
   const runQuery = (args: any) => {

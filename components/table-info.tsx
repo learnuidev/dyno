@@ -26,10 +26,6 @@ export const TableInfo = ({ selectedTable }: { selectedTable: string }) => {
           </h3>
         </div>
       </div>
-
-      {/* <code>
-        <pre>{JSON.stringify(tableInfo, null, 2)}</pre>
-      </code> */}
     </section>
   );
 };

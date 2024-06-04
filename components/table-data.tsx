@@ -12,15 +12,14 @@ export const TableData = ({ selectedTable }: { selectedTable: string }) => {
 
   return (
     <section className="h-screen overflow-y-auto">
-      <DynamoDBTable
-        TableName={selectedTable}
-        tableDescription={tableInfo}
-        Items={scannedData?.Items}
-        isLoading={isLoading && isInfoLoading}
-      />
-      {/* <code className="overflow-y-auto">
-        <pre>{JSON.stringify(scannedData?.Items, null, 2)}</pre>
-      </code> */}
+      {scannedData?.Items && (
+        <DynamoDBTable
+          TableName={selectedTable}
+          tableDescription={tableInfo}
+          Items={scannedData?.Items}
+          isLoading={isLoading && isInfoLoading}
+        />
+      )}
     </section>
   );
 };

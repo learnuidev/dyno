@@ -83,18 +83,14 @@ type Props = {
 };
 
 const renderSubComponent = ({ row }: { row: Row<User> }) => {
-  console.log("ROW", row);
   return (
     <pre style={{ fontSize: "10px" }}>
-      {/* <code>{JSON.stringify(row.original, null, 2)}</code> */}
       <code>{JSON.stringify(row.original)}</code>
     </pre>
   );
 };
 
 export function DynamoDBTableV3(props: any) {
-  // console.log('DYNAMODB', props);
-
   const { items } = props;
   const [activeData, setActiveData] = React.useState(null);
 
@@ -104,7 +100,6 @@ export function DynamoDBTableV3(props: any) {
 
   function MyCell(props: any) {
     const value = props.getValue();
-    console.log("CELL", props);
     return <div>{JSON.stringify(value)}</div>;
   }
 
@@ -119,57 +114,46 @@ export function DynamoDBTableV3(props: any) {
       };
     });
 
-    console.log("CLOS", cols);
-
     return [
-      {
-        id: "Action",
-        header: () => <span>...</span>,
-        cell: ({ row }: any) => {
-          console.log("ROW", row);
-          return (
-            <div className="opacity-0 transition-opacity hover:opacity-100 flex justify-around">
-              <div>
-                <div>
-                  <button
-                    className="dark:text-gray-200 dark:active:bg-zinc-700 dark:hover:bg-zinc-800"
-                    onClick={() => {
-                      // console.log('row', row);
-                      // console.log('table.options.meta?.setActive', table.options.meta?.setActive);
-                      setActiveData(row.original);
-                      console.log("rowwww", row);
-                    }}
-                  >
-                    edit
-                    {/* <PencilIcon className="dark:text-gray-200 h-3 w-3 dark:bg-gray-900 text-gray-800 hover:text-pink-600 dark:hover:text-pink-600" /> */}
-                  </button>
-                </div>
-              </div>
+      //   {
+      //     id: "Action",
+      //     header: () => <span>...</span>,
+      //     cell: ({ row }: any) => {
+      //       return (
+      //         <div className="opacity-0 transition-opacity hover:opacity-100 flex justify-around">
+      //           <div>
+      //             <div>
+      //               <button
+      //                 className="dark:text-gray-200 dark:active:bg-zinc-700 dark:hover:bg-zinc-800"
+      //                 onClick={() => {
+      //                   setActiveData(row.original);
+      //                 }}
+      //               >
+      //                 edit
+      //                 {/* <PencilIcon className="dark:text-gray-200 h-3 w-3 dark:bg-gray-900 text-gray-800 hover:text-pink-600 dark:hover:text-pink-600" /> */}
+      //               </button>
+      //             </div>
+      //           </div>
 
-              <div>
-                <div>
-                  <button
-                    className="dark:text-gray-200 dark:active:bg-zinc-700 dark:hover:bg-zinc-800"
-                    onDoubleClick={() => {
-                      console.log(
-                        "table.options.meta?.setDelete"
-                        // table.options.meta?.setDelete,
-                      );
-                      // table.options.meta?.setDelete(row.original);
+      //           <div>
+      //             <div>
+      //               <button
+      //                 className="dark:text-gray-200 dark:active:bg-zinc-700 dark:hover:bg-zinc-800"
+      //                 onDoubleClick={() => {
+      //                   // table.options.meta?.setDelete(row.original);
 
-                      props.deleteItem(row.original);
-                      console.log("rowwww", row);
-                    }}
-                  >
-                    delete
-                    {/* <TrashIcon className="dark:text-gray-200 h-3 w-3 dark:bg-gray-900 text-gray-800 hover:text-pink-600 dark:hover:text-pink-600" /> */}
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        },
-      },
+      //                   props.deleteItem(row.original);
+      //                 }}
+      //               >
+      //                 delete
+      //                 {/* <TrashIcon className="dark:text-gray-200 h-3 w-3 dark:bg-gray-900 text-gray-800 hover:text-pink-600 dark:hover:text-pink-600" /> */}
+      //               </button>
+      //             </div>
+      //           </div>
+      //         </div>
+      //       );
+      //     },
+      //   },
       ...cols,
     ];
   };
@@ -185,15 +169,10 @@ export function DynamoDBTableV3(props: any) {
     [props.TableName]
   );
 
-  // console.log('tablev2', props);
-
   const calculateValue = (val: any) => {
     if (typeof val === "object" && !Array.isArray(val) && val !== null) {
       const [[key, value]] = Object.entries(val) as any;
 
-      console.log("KEY", key);
-
-      console.log("VALUE", value);
       switch (key) {
         case "S":
           return value;
@@ -211,26 +190,19 @@ export function DynamoDBTableV3(props: any) {
         const res = {};
         const keys = Object.keys(item);
 
-        console.log("ITEM", item);
-
         for (const key of keys) {
           const val = item[key];
 
-          console.log("VAL", val);
           // const presVal = typeof val === 'object' ? JSON.stringify(val) : val;
           const presVal = calculateValue(val);
           //   @ts-ignore
           res[key] = presVal;
         }
 
-        console.log("RES", res);
-
         return res;
       }),
     [items]
   );
-
-  // console.log('PRES VALUE', presView);
 
   const [data, setData] = React.useState(() => presView);
 
@@ -239,10 +211,6 @@ export function DynamoDBTableV3(props: any) {
   ]);
 
   const table = useReactTable({
-    // setActive: value => {
-    //     // console.log('set active', value);
-    //     setActiveData(value);
-    // },
     data,
     columns,
     columnResizeMode: "onChange",
@@ -260,29 +228,11 @@ export function DynamoDBTableV3(props: any) {
 
   useEffect(() => {
     setColumns([...defaultColumns]);
-  }, [items]);
+  }, [defaultColumns, items]);
 
   return (
-    <div>
-      {/* {activeData && (
-        <DynamoDBEditorModal
-          item={activeData}
-          isOpen={Boolean(activeData)}
-          onSubmit={(value) => {
-            console.log("TODO: Submit data", value);
-
-            // const filteredValue = Object.entries(value).reduce((acc, curr) => {
-            //     const [key, val] = curr;
-
-            //     return acc;
-            // }, {});
-            props.updateItem(value);
-            setActiveData(null);
-          }}
-          onClose={() => setActiveData(null)}
-        />
-      )} */}
-      <div className="overflow-x-auto overflow-y-auto h-[700px] shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-4">
+    <div className="mx-4">
+      <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg mt-4">
         <table
           {...{
             className:
@@ -344,9 +294,6 @@ export function DynamoDBTableV3(props: any) {
                     className="divide-x divide-gray-200 dark:divide-gray-800"
                   >
                     {row.getVisibleCells().map((cell) => {
-                      // console.log('CELl', cell.column.columnDef.cell);
-                      // console.log('CELLCONT', cell.getContext());
-
                       const val = calculateValue(
                         // @ts-ignore
                         flexRender(
@@ -356,29 +303,23 @@ export function DynamoDBTableV3(props: any) {
                         ).props.getValue()
                       );
 
-                      console.log("BLABLA", val);
-
-                      // console.log(
-                      //     'CELL',
-                      //    ,
-                      // );
                       return (
                         //   eslint-disable-next-line
                         <td
                           {...{
                             key: cell.id,
                             className:
-                              "whitespace-nowrap p-2 text-xs text-gray-500 dark:text-gray-300",
+                              "whitespace-nowrap p-2 text-xs text-gray-500 dark:text-gray-300 truncate",
                             style: {
                               width: cell.column.getSize(),
                             },
                           }}
                         >
-                          {flexRender(
+                          {/* {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
-                          )}
-                          {/* {JSON.stringify(val)} */}
+                          )} */}
+                          {JSON.stringify(val)?.slice(0, 32)}
                         </td>
                       );
                     })}
@@ -416,52 +357,8 @@ export function DynamoDBTableV3(props: any) {
 export function DynamoDBTable(props: any) {
   const { tableDescription, Items, isLoading } = props;
 
-  // const setCurrentProfile = useProfileState((state: ProfileState) => state.setCurrentProfile);
-  // const { data: awsIntegrations } = useListUserExtensionsQuery(
-  //     {
-  //         extensionId: 'AWS',
-  //     },
-  //     {},
-  // );
-
-  // const { data: Items, isLoading } = useScanQuery(
-  //     { TableName: props.TableName, region, profile: currentProfile },
-  //     {
-  //         enabled: Boolean(props?.TableName) && Boolean(region) && Boolean(currentProfile),
-  //     },
-  // );
-
-  //   const { data: Items, isLoading } = useScanQueryV2(
-  //     { TableName: props.TableName, region, profile: currentProfile },
-  //     {
-  //       enabled:
-  //         Boolean(props?.TableName) && Boolean(region) && Boolean(currentProfile),
-  //     }
-  //   );
-
-  //   const { data: tableDescription, isLoading: isTableDescriptionLoading } =
-  //     useDescribeTableQuery(
-  //       { TableName: props?.TableName, region, profile: currentProfile },
-  //       {
-  //         enabled:
-  //           Boolean(props?.TableName) &&
-  //           Boolean(region) &&
-  //           Boolean(currentProfile),
-  //       }
-  //     );
-
   const [queryState, setQueryState] = useState(null);
   const [queryResult, setQueryResult] = useState(null);
-
-  //   const updateItem = useUpdateItemMutation(
-  //     { TableName: props?.TableName, region, profile: currentProfile },
-  //     {}
-  //   );
-
-  //   const deleteItem = useDeleteItemMutation(
-  //     { TableName: props?.TableName, region, profile: currentProfile },
-  //     {}
-  //   );
 
   const keyAttribute = useMemo(
     () =>
@@ -470,15 +367,6 @@ export function DynamoDBTable(props: any) {
       )?.AttributeName,
     [tableDescription]
   );
-
-  //   if (!props.TableName) {
-  //     return (
-  //       <div className="dark:text-gray-200 text-center">
-  //         {" "}
-  //         Please select a table{" "}
-  //       </div>
-  //     );
-  //   }
 
   if (isLoading) {
     return <div> Loading items...</div>;
@@ -539,7 +427,7 @@ export function DynamoDBTable(props: any) {
         }}
         deleteItem={(item: any) => {
           const keyVal = item[keyAttribute];
-          console.log("DELETEEEE");
+
           // deleteItem.mutate({
           //   Key: {
           //     [keyAttribute]: keyVal,

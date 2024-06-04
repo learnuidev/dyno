@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 
 import {
   useReactTable,
@@ -91,10 +92,33 @@ const renderSubComponent = ({ row }: { row: Row<User> }) => {
 };
 
 export function DynamoDBTableV3(props: any) {
-  const [attribute, setAttribute] = useState("group");
-  const [predicate, setPredicate] = useState("inc");
-  const [value, setValue] = useState("neng");
+  const [attribute, setAttribute] = useState("level");
+  const [predicate, setPredicate] = useState(">");
+  const [value, setValue] = useState("100");
   //   const { items } = props;
+
+  const onUpdate = (queryStr: string) => {
+    if (queryStr) {
+      const newItems = props?.items?.filter((item: any) => {
+        return JSON.stringify(item)
+          ?.toLowerCase()
+          ?.includes(queryStr?.toLowerCase());
+      });
+
+      setItems(newItems);
+    } else {
+      setItems(props?.items?.slice(0, 200));
+    }
+  };
+
+  const debouncedSearch = useDebouncedCallback(
+    // function
+    (value) => {
+      onUpdate?.(value);
+    },
+    // delay in ms
+    400
+  );
 
   const [items, setItems] = useState(props.items?.slice(0, 200));
   const [activeData, setActiveData] = React.useState(null);
@@ -274,6 +298,16 @@ export function DynamoDBTableV3(props: any) {
 
   return (
     <div className="mx-4">
+      <div className="mb-4 space-x-4">
+        <input
+          //   value={attribute}
+          onChange={(e) => {
+            debouncedSearch(e.target.value);
+          }}
+          placeholder="Search table"
+          className="h-10 px-2 w-1/2 placeholder:text-gray-400"
+        />
+      </div>
       <div className="mb-4 space-x-4">
         <input
           value={attribute}

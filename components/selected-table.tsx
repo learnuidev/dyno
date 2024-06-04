@@ -27,10 +27,10 @@ export const SelectedTable = ({ selectedTable }: { selectedTable: string }) => {
           <div className="space-x-4"></div>
         </div>
 
-        <TabsContent value="info" className="my-8">
+        <TabsContent value="info" className="py-8">
           <TableInfo selectedTable={selectedTable} />
         </TabsContent>
-        <TabsContent value="table" className="my-8">
+        <TabsContent value="table" className="py-8">
           <TableData selectedTable={selectedTable} />
         </TabsContent>
       </Tabs>

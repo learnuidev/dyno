@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import {
   useReactTable,
@@ -9,6 +10,7 @@ import {
   getExpandedRowModel,
   Row,
 } from "@tanstack/react-table";
+import { cn } from "@/lib/utils";
 
 const constructParams = (params: any) => {
   const removeNull = function removeNull(obj: any) {
@@ -298,6 +300,32 @@ export function DynamoDBTableV3(props: any) {
 
   return (
     <div className="mx-4">
+      <div className="grid grid-cols-12 gap-4 m-4">
+        {table.getAllLeafColumns().map((column) => {
+          return (
+            <div key={column.id} className="flex space-x-2">
+              {/* <Checkbox
+                checked={column.getIsVisible()}
+                onInput={() => {
+                  column.getToggleVisibilityHandler();
+                }}
+              /> */}
+              <input
+                className={cn(
+                  "peer h-4 w-4 shrink-0 rounded-sm border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
+                  ""
+                )}
+                {...{
+                  type: "checkbox",
+                  checked: column.getIsVisible(),
+                  onChange: column.getToggleVisibilityHandler(),
+                }}
+              />
+              <label className="truncate">{column.id}</label>
+            </div>
+          );
+        })}
+      </div>
       <div className="mb-4 space-x-4">
         <input
           //   value={attribute}

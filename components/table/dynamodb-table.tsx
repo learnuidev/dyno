@@ -96,7 +96,7 @@ export function DynamoDBTableV3(props: any) {
 
   const titles = [
     ...(new Set(items.map((item: any) => Object.keys(item)).flat()) as any),
-  ];
+  ]?.filter((item) => !Number.isFinite(parseInt(item)));
 
   function MyCell(props: any) {
     const value = props.getValue();

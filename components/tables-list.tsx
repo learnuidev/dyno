@@ -5,6 +5,7 @@ import { SelectedTable } from "./selected-table";
 import { useQuery } from "@tanstack/react-query";
 import { ListTablesResponse } from "@/libs/dynamodb/list-tables";
 import { FilterTablesInput } from "./filter-tables-input";
+import { DynoBanner } from "./dyno-banner";
 
 export const formatTableName = (tableName: string) => {
   return tableName?.split("-")[3] === undefined
@@ -63,14 +64,9 @@ export default function TablesList() {
 
   return (
     <main className="dark:bg-black dark:text-white h-screen overflow-y-auto">
-      <div className="pt-32 pb-12 text-center">
-        <h1 className="text-5xl md:text-7xl font-bold">dyno</h1>
-        <h1 className="text-xl md:text-3xl mx-8 mt-4 md:mt-8 font-extralight text-gray-400">
-          delightful dynamodb client from the future
-        </h1>
-      </div>
+      <DynoBanner />
 
-      <section className="flex w-full">
+      <section className="flex w-full mt-8">
         <FilterTablesInput query={query} setQuery={setQuery} />
       </section>
 

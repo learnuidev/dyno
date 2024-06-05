@@ -3,6 +3,7 @@ import { TableInfo } from "./table-info";
 import { TableData } from "./table-data";
 
 export const SelectedTable = ({ selectedTable }: { selectedTable: string }) => {
+  return <TableData selectedTable={selectedTable} />;
   return (
     <section className={""}>
       <Tabs defaultValue="table" className="p-0">

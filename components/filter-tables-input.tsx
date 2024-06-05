@@ -3,8 +3,10 @@ import { cn } from "@/lib/utils";
 export const FilterTablesInput = ({
   query,
   setQuery,
+  placeholder,
 }: {
   query: string;
+  placeholder?: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
@@ -13,6 +15,11 @@ export const FilterTablesInput = ({
         value={query}
         onChange={(event) => {
           setQuery(event.target.value);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            console.log(event.key);
+          }
         }}
         className={cn(
           // 1. layout
@@ -24,7 +31,7 @@ export const FilterTablesInput = ({
           // 4. Shadow
           "focus:shadow-sm focus:shadow-rose-400 transition"
         )}
-        placeholder="ask anything..."
+        placeholder={placeholder || "ask anything..."}
       />
     </div>
   );

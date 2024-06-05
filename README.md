@@ -31,6 +31,10 @@ bun dev
 
 ## Features
 
-1. Dynolog
-2. ETL
-3. Integrations (google spreadsheet, airtable)
+0. Search
+1. Clone
+2. Clear
+3. ETL
+4. Dynolog
+5. Integrations (google spreadsheet, airtable)
+6. History

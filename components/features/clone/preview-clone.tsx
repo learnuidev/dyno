@@ -1,3 +1,4 @@
+import { StepItem } from "@/components/step-item";
 import { useDescribeTable } from "@/hooks/use-describe-table";
 import { useGetMandatoryAttributes } from "@/hooks/use-get-mandatory-attributes";
 import { useGetPrimaryKey } from "@/hooks/use-get-primary-key";
@@ -37,11 +38,11 @@ export const PreviewClone = (props: any) => {
 
   const attributesList = [
     ...(new Set(
-      scannedData?.Items.map((item: any) => Object.keys(item)).flat()
+      scannedData?.map((item: any) => Object.keys(item)).flat()
     ) as any),
   ]?.filter((item) => !Number.isFinite(parseInt(item)));
 
-  const previewItems = scannedData?.Items?.map((item: any) => {
+  const previewItems = scannedData?.map((item: any) => {
     // return item;
     // return attributes;
     const init = pluck(item, attributes) as any;
@@ -54,14 +55,7 @@ export const PreviewClone = (props: any) => {
   });
 
   return (
-    <div className="my-16 flex items-center justify-center flex-col">
-      <div className="mb-8">
-        <p className="text-center text-3xl mb-2 text-gray-600 font-extralight border-gray-800 border-2 h-12 w-12 rounded-full pt-[3px]">
-          4
-        </p>
-      </div>
-      <h2 className="text-center text-gray-200 text-2xl font-light">Preview</h2>
-
+    <StepItem stepNumber={4} title="Preview">
       <section className="dark:text-white">
         <code>
           <pre>{JSON.stringify(previewItems?.[0], null, 2)}</pre>
@@ -79,6 +73,6 @@ export const PreviewClone = (props: any) => {
           {isCreating ? "Creating..." : "Create"}
         </button>
       </div>
-    </div>
+    </StepItem>
   );
 };

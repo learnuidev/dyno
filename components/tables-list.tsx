@@ -9,7 +9,8 @@ import { DynoBanner } from "./dyno-banner";
 import { TableItem } from "./table-item";
 import { Feature, features } from "@/lib/features";
 import { Features } from "./features/features";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useGetTask } from "@/hooks/use-get-task";
 
 export const useListTables = () => {
   // const { data: authUser } = useCurrentAuthUser({});
@@ -38,9 +39,11 @@ export default function TablesList() {
   const { data: tables } = useListTables();
   const [selectedTable, setSelectedTable] = useState("");
   const [query, setQuery] = useState("");
+  const router = useRouter();
 
   const addSelectedTable = (table: string) => {
-    setSelectedTable(table);
+    router.push(`/?table=${table}`);
+    // setSelectedTable(table);
   };
 
   // Features
@@ -99,21 +102,11 @@ export default function TablesList() {
       </section>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
-        {filteredTableNames?.map((tableName: string) => {
-          return (
-            <TableItem
-              key={tableName}
-              tableName={tableName}
-              addSelectedTable={addSelectedTable}
-            />
-          );
-        })}
-      </section>
-      <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
         {filteredFeatures?.map((feature: Feature) => {
           return (
             <TableItem
               key={feature?.id}
+              description={feature?.description}
               tableName={feature?.title}
               addSelectedTable={(featureTitle) => {
                 const feature = features?.find(
@@ -121,6 +114,18 @@ export default function TablesList() {
                 );
                 feature?.id && setQuery(feature?.id);
               }}
+            />
+          );
+        })}
+      </section>
+
+      <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
+        {filteredTableNames?.map((tableName: string) => {
+          return (
+            <TableItem
+              key={tableName}
+              tableName={tableName}
+              addSelectedTable={addSelectedTable}
             />
           );
         })}

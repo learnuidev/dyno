@@ -12,7 +12,7 @@ export const TableInfo = ({ selectedTable }: { selectedTable: string }) => {
         <div>
           <h1 className="text-3xl">
             {" "}
-            {formatTableName(tableInfo?.Table?.TableName)}
+            {formatTableName(tableInfo?.Table?.TableName || "")}
           </h1>
           <h2 className="font-extralight text-gray-400 my-2">
             {selectedTable}

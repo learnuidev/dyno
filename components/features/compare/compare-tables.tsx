@@ -14,7 +14,7 @@ export const CompareTables = (props: {
       title={isLoading ? "Comparing..." : "Results"}
       description={isLoading ? "This will take few sections" : ""}
     >
-      {results.added?.length > 0 && (
+      {results.added?.length > 0 ? (
         <>
           <section>
             <h1>
@@ -41,6 +41,10 @@ export const CompareTables = (props: {
             </button>
           </section>
         </>
+      ) : (
+        <section>
+          <h1>No changes</h1>
+        </section>
       )}
     </StepItem>
   );

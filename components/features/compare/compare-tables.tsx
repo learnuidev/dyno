@@ -14,7 +14,11 @@ export const CompareTables = (props: {
       title={isLoading ? "Comparing..." : "Results"}
       description={isLoading ? "This will take few sections" : ""}
     >
-      {results.added?.length > 0 ? (
+      {isLoading ? (
+        <section>
+          <h1>...</h1>
+        </section>
+      ) : results.added?.length > 0 ? (
         <>
           <section>
             <h1>

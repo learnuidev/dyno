@@ -1,6 +1,7 @@
 export const dynoBannerData = {
   title: "dyno",
-  description: "delightful dynamodb app from the future",
+  // description: "delightful dynamodb app from the future",
+  description: "delightful dynamodb app",
 };
 
 export const DynoBanner = () => {

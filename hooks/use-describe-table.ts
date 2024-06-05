@@ -12,7 +12,7 @@ interface DescribeTableResponse {
         AttributeType: "S";
       },
     ];
-    TableName: "nomadmethod-api-dev-ComponentsTable2-PVEY9E82WWT0";
+    TableName: string;
     KeySchema: [
       {
         AttributeName: "id";

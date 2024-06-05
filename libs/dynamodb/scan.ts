@@ -2,7 +2,11 @@ import { dynamoDocumentClient } from "./client";
 
 export const maxDuration = 60;
 
-const recursiveScan = async (tableName: string, res = [], key = null) => {
+const recursiveScan = async (
+  tableName: string,
+  res = [],
+  key = null
+): Promise<any> => {
   let resp;
 
   if (key) {

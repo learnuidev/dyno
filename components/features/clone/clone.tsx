@@ -28,9 +28,9 @@ export const Clone = ({ setQuery }: any) => {
 
   return (
     <section className="p-8">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between text-gray-600">
         <button
-          className="text-2xl font-extralight uppercase"
+          className="text-2xl font-extralight uppercase hover:text-white transition"
           onClick={() => {
             setQuery("");
           }}
@@ -38,7 +38,7 @@ export const Clone = ({ setQuery }: any) => {
           x
         </button>
 
-        <h1 className="text-4xl font-extralight">clone</h1>
+        <h1 className="text-2xl font-extralight">clone</h1>
       </div>
 
       <CloneSteps

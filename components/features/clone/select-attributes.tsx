@@ -1,4 +1,5 @@
 import { FilterTablesInput } from "@/components/filter-tables-input";
+import { StepItem } from "@/components/step-item";
 
 import { useDescribeTable } from "@/hooks/use-describe-table";
 import { useGetMandatoryAttributes } from "@/hooks/use-get-mandatory-attributes";
@@ -35,21 +36,17 @@ export const SelectAttributes = ({
 
   const attributesList = [
     ...(new Set(
-      scannedData?.Items.map((item: any) => Object.keys(item)).flat()
+      scannedData?.map((item: any) => Object.keys(item)).flat()
     ) as any),
   ]?.filter((item) => !Number.isFinite(parseInt(item)));
 
   return (
-    <div className="my-16 flex items-center justify-center flex-col">
-      <div className="mb-8">
-        <p className="text-center text-3xl mb-2 text-gray-600 font-extralight border-gray-800 border-2 h-12 w-12 rounded-full pt-[3px]">
-          3
-        </p>
-      </div>
-      <h2 className="text-center text-gray-200 text-2xl font-light">
-        Please select the attributes
-      </h2>
-
+    <StepItem
+      stepNumber={3}
+      title="Select Attributes"
+      description="Please select the attributes"
+      className="relative"
+    >
       <section className="flex w-full mt-8">
         <FilterTablesInput
           placeholder={"search attributes"}
@@ -65,8 +62,6 @@ export const SelectAttributes = ({
       </section> */}
 
       <section className="mt-16">
-        <h1 className="text-xl text-gray-300 text-center"> Attributes</h1>
-
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 text-2xl gap-6">
           {attributesList?.map((attribute) => (
             <div
@@ -107,9 +102,13 @@ export const SelectAttributes = ({
             </div>
           ))}
         </div>
+      </section>
 
-        <div>
+      <div className="flex w-full fixed z-50 bottom-4">
+        <div className="flex items-center w-full justify-center">
+          <div></div>
           <button
+            className="dark:hover:text-white hover:shadow-sm shadow-sm shadow-emerald-300 hover:shadow-emerald-400 transition px-4  py-2 rounded-full dark:bg-black dark:text-gray-400"
             onClick={() => {
               setAttributes([...attributesSync, ...mandatoryKeys]);
             }}
@@ -117,7 +116,7 @@ export const SelectAttributes = ({
             Continue
           </button>
         </div>
-      </section>
-    </div>
+      </div>
+    </StepItem>
   );
 };

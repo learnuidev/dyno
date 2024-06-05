@@ -12,6 +12,8 @@ import {
 import { cn } from "@/lib/utils";
 import { TableAttributes } from "./table-attributes";
 import { TableFilters } from "./table-filters";
+import { Compare } from "../features/compare/compare";
+import { useGetTask } from "@/hooks/use-get-task";
 
 const constructParams = (params: any) => {
   const removeNull = function removeNull(obj: any) {
@@ -99,6 +101,7 @@ export function DynamoDBTableV3(props: any) {
   const [predicate, setPredicate] = useState(">");
   const [value, setValue] = useState("100");
   //   const { items } = props;
+  const [query, setQuery] = useState("");
 
   const onUpdate = (queryStr: string) => {
     if (queryStr) {
@@ -110,7 +113,7 @@ export function DynamoDBTableV3(props: any) {
 
       setItems(newItems);
     } else {
-      setItems(props?.items?.slice(0, 200));
+      setItems(props?.items?.slice(0, 100));
     }
   };
 
@@ -299,6 +302,24 @@ export function DynamoDBTableV3(props: any) {
     setColumns([...defaultColumns]);
   }, [defaultColumns, items]);
 
+  const featureType = useGetTask();
+
+  const isComparible =
+    ["compare"]?.includes(query?.trim()?.toLowerCase()) ||
+    featureType === "compare";
+
+  // if (isComparible) {
+  //   return (
+  //     <div>
+  //       <Compare />
+  //     </div>
+  //   );
+  // }
+
+  const isSum = ["count", "total", "len", "total count", "sum", "z"]?.includes(
+    query?.trim()?.toLowerCase()
+  );
+
   return (
     <div className="mx-4">
       <TableAttributes table={table} />
@@ -306,10 +327,11 @@ export function DynamoDBTableV3(props: any) {
         <input
           //   value={attribute}
           onChange={(e) => {
+            setQuery(e.target.value);
             debouncedSearch(e.target.value);
           }}
-          placeholder="Search table"
-          className="h-10 px-2 w-full placeholder:text-gray-400 outline-none"
+          placeholder="how can i help"
+          className="h-10 px-2 placeholder:text-gray-400 outline-none"
         />
       </section>
       {/* <TableFilters
@@ -322,127 +344,137 @@ export function DynamoDBTableV3(props: any) {
         value={value}
         setValue={setValue}
       /> */}
-      <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-        <table
-          {...{
-            className:
-              "min-w-full divide-y divide-gray-300 dark:divide-gray-900",
-            style: {
-              width: table.getCenterTotalSize(),
-            },
-          }}
-        >
-          <thead className="bg-gray-50 dark:bg-gray-900">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr
-                key={headerGroup.id}
-                className="divide-x divide-gray-200 dark:divide-gray-900"
-              >
-                {headerGroup.headers.map((header) => (
-                  //   eslint-disable-next-line
-                  <th
-                    {...{
-                      key: header.id,
-                      colSpan: header.colSpan,
-                      className:
-                        "py-2.5 pl-4 pr-4 text-left text-xs font-semibold text-gray-900 sm:pl-6 dark:text-gray-200",
-                      style: {
-                        width: header.getSize(),
-                      },
-                    }}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                    <div
+      {isSum ? (
+        <div>
+          <h1>{props.items?.length}</h1>
+        </div>
+      ) : isComparible ? (
+        <div>
+          <Compare />
+        </div>
+      ) : (
+        <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+          <table
+            {...{
+              className:
+                "min-w-full divide-y divide-gray-300 dark:divide-gray-900",
+              style: {
+                width: table.getCenterTotalSize(),
+              },
+            }}
+          >
+            <thead className="bg-gray-50 dark:bg-gray-900">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr
+                  key={headerGroup.id}
+                  className="divide-x divide-gray-200 dark:divide-gray-900"
+                >
+                  {headerGroup.headers.map((header) => (
+                    //   eslint-disable-next-line
+                    <th
                       {...{
-                        onMouseDown: header.getResizeHandler(),
-                        onTouchStart: header.getResizeHandler(),
-                        className: `resizer ${
-                          header.column.getIsResizing() ? "isResizing" : ""
-                        }`,
+                        key: header.id,
+                        colSpan: header.colSpan,
+                        className:
+                          "py-2.5 pl-4 pr-4 text-left text-xs font-semibold text-gray-900 sm:pl-6 dark:text-gray-200",
                         style: {
-                          transform: "",
+                          width: header.getSize(),
                         },
                       }}
-                    />
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="divide-y divide-gray-200 bg-white dark:bg-[#0f1117] dark:divide-gray-900">
-            {table.getRowModel().rows.map((row) => {
-              return (
-                //   eslint-disable-next-line
-                <React.Fragment>
-                  <tr
-                    key={row.id}
-                    className="divide-x divide-gray-200 dark:divide-gray-800"
-                  >
-                    {row.getVisibleCells().map((cell) => {
-                      const val = calculateValue(
-                        // @ts-ignore
-                        flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      <div
+                        {...{
+                          onMouseDown: header.getResizeHandler(),
+                          onTouchStart: header.getResizeHandler(),
+                          className: `resizer ${
+                            header.column.getIsResizing() ? "isResizing" : ""
+                          }`,
+                          style: {
+                            transform: "",
+                          },
+                        }}
+                      />
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="divide-y divide-gray-200 bg-white dark:bg-[#0f1117] dark:divide-gray-900">
+              {table.getRowModel().rows.map((row) => {
+                return (
+                  //   eslint-disable-next-line
+                  <React.Fragment>
+                    <tr
+                      key={row.id}
+                      className="divide-x divide-gray-200 dark:divide-gray-800"
+                    >
+                      {row.getVisibleCells().map((cell) => {
+                        const val = calculateValue(
                           // @ts-ignore
-                        ).props.getValue()
-                      );
+                          flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                            // @ts-ignore
+                          ).props.getValue()
+                        );
 
-                      const originalVal = cell.row.original;
+                        const originalVal = cell.row.original;
 
-                      const stringifiedCellValue = JSON.stringify(val);
+                        const stringifiedCellValue = JSON.stringify(val);
 
-                      const cellValueFormatted =
-                        stringifiedCellValue?.length > 54
-                          ? `${stringifiedCellValue?.slice(0, 54)}...`
-                          : stringifiedCellValue;
+                        const cellValueFormatted =
+                          stringifiedCellValue?.length > 54
+                            ? `${stringifiedCellValue?.slice(0, 54)}...`
+                            : stringifiedCellValue;
 
-                      return (
-                        //   eslint-disable-next-line
-                        <td
-                          {...{
-                            key: cell.id,
-                            className:
-                              "whitespace-nowrap p-2 text-xs text-gray-500 dark:text-gray-300 truncate",
-                            style: {
-                              width: cell.column.getSize(),
-                            },
-                          }}
-                          onClick={() => {
-                            console.log(originalVal);
-                            alert(JSON.stringify(originalVal));
-                          }}
-                        >
-                          {/* {flexRender(
+                        return (
+                          //   eslint-disable-next-line
+                          <td
+                            {...{
+                              key: cell.id,
+                              className:
+                                "whitespace-nowrap p-2 text-xs text-gray-500 dark:text-gray-300 truncate",
+                              style: {
+                                width: cell.column.getSize(),
+                              },
+                            }}
+                            onClick={() => {
+                              console.log(originalVal);
+                              alert(JSON.stringify(originalVal));
+                            }}
+                          >
+                            {/* {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                           )} */}
-                          {/* {JSON.stringify(val)?.slice(0, 54)} */}
-                          {cellValueFormatted}
-                        </td>
-                      );
-                    })}
-                  </tr>
-
-                  {row.getIsExpanded() && (
-                    <tr>
-                      {/* 2nd row is a custom 1 cell row */}
-                      <td colSpan={row.getVisibleCells().length}>
-                        {renderSubComponent({ row })}
-                      </td>
+                            {/* {JSON.stringify(val)?.slice(0, 54)} */}
+                            {cellValueFormatted}
+                          </td>
+                        );
+                      })}
                     </tr>
-                  )}
-                </React.Fragment>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+
+                    {row.getIsExpanded() && (
+                      <tr>
+                        {/* 2nd row is a custom 1 cell row */}
+                        <td colSpan={row.getVisibleCells().length}>
+                          {renderSubComponent({ row })}
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

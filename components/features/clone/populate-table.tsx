@@ -1,3 +1,4 @@
+import { StepItem } from "@/components/step-item";
 import { useDescribeTable } from "@/hooks/use-describe-table";
 import { pluck } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -31,7 +32,7 @@ export const PopulateTable = (props: any) => {
     }
   );
 
-  const previewItems = scannedData?.Items?.map((item: any) => {
+  const previewItems = scannedData?.map((item: any) => {
     // return item;
     // return attributes;
     const init = pluck(item, attributes) as any;
@@ -65,22 +66,11 @@ export const PopulateTable = (props: any) => {
   }, [newTableName, previewItems, selectedStepTable, setPreview]);
 
   return (
-    <div className="my-16 flex items-center justify-center flex-col">
-      <div>
-        <p className="text-center text-3xl mb-2 text-gray-600 font-extralight border-gray-800 border-2 h-12 w-12 rounded-full pt-[3px]">
-          7
-        </p>
-      </div>
-      <h2 className="text-center text-gray-200 text-2xl font-light">
-        Populating Table
-      </h2>
-
+    <StepItem stepNumber={7} title="Populating Table">
       <section className="dark:text-white">
-        <code>
-          <pre>{JSON.stringify(tableInfo, null, 2)}</pre>
-        </code>
+        <h1 className="my-32 text-5xl bont-bold">...</h1>
         {/* <div>{JSON.stringify(previewItems?.[0], null, 2)}</div> */}
       </section>
-    </div>
+    </StepItem>
   );
 };

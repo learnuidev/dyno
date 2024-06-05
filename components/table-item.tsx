@@ -2,9 +2,11 @@ import { formatTableName } from "@/lib/utils";
 
 export const TableItem = ({
   tableName,
+  description,
   addSelectedTable,
 }: {
   tableName: string;
+  description?: string;
   addSelectedTable: (tableName: string) => void;
 }) => {
   return (
@@ -18,7 +20,7 @@ export const TableItem = ({
         <span>{formatTableName(tableName)}</span>
       </button>
 
-      <p className="text-[10px] text-gray-400">{tableName}</p>
+      <p className="text-[12px] text-gray-700">{description || tableName}</p>
     </div>
   );
 };

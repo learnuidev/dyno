@@ -1,19 +1,43 @@
-import { transformItem } from "./utils/transform-item";
-import { dynamodb } from "./client";
+import { dynamoDocumentClient } from "./client";
 
 export const maxDuration = 60;
+
+const recursiveScan = async (tableName: string, res = [], key = null) => {
+  let resp;
+
+  if (key) {
+    resp = await dynamoDocumentClient
+      .scan({
+        TableName: tableName,
+        Limit: 1000,
+        ExclusiveStartKey: key,
+      })
+      ?.promise();
+  } else {
+    resp = (await dynamoDocumentClient
+      .scan({
+        TableName: tableName,
+        Limit: 1000,
+      })
+      ?.promise()) as any;
+  }
+
+  if (resp?.LastEvaluatedKey) {
+    return recursiveScan(
+      tableName,
+      res.concat(resp?.Items) as any,
+      resp?.LastEvaluatedKey
+    );
+  }
+
+  return res?.concat(resp?.Items);
+};
 
 export async function scan(
   { TableName }: { TableName: string },
   { transform }: { transform?: boolean }
 ) {
-  const resp = await dynamodb.scan({ TableName: TableName }).promise();
-
-  if (transform) {
-    resp.Items = resp.Items?.map(transformItem);
-
-    return resp;
-  }
+  const resp = await recursiveScan(TableName);
 
   return resp;
 }

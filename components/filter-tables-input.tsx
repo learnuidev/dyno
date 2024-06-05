@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils";
 
 export const FilterTablesInput = ({
+  autoFocus = true,
   query,
   setQuery,
   placeholder,
 }: {
+  autoFocus?: boolean;
   query: string;
   placeholder?: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
@@ -12,6 +14,7 @@ export const FilterTablesInput = ({
   return (
     <div className="flex items-center w-full justify-center">
       <input
+        autoFocus
         value={query}
         onChange={(event) => {
           setQuery(event.target.value);
@@ -31,7 +34,7 @@ export const FilterTablesInput = ({
           // 4. Shadow
           "focus:shadow-sm focus:shadow-rose-400 transition"
         )}
-        placeholder={placeholder || "ask anything..."}
+        placeholder={placeholder || "how can i help"}
       />
     </div>
   );

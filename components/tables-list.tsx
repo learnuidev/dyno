@@ -7,8 +7,11 @@ import { ListTablesResponse } from "@/libs/dynamodb/list-tables";
 import { FilterTablesInput } from "./filter-tables-input";
 import { DynoBanner } from "./dyno-banner";
 import { TableItem } from "./table-item";
+import { Feature, features } from "@/lib/features";
+import { Features } from "./features/features";
+import { useSearchParams } from "next/navigation";
 
-const useListTables = () => {
+export const useListTables = () => {
   // const { data: authUser } = useCurrentAuthUser({});
   const authUser = {
     jwt: "",
@@ -40,6 +43,29 @@ export default function TablesList() {
     setSelectedTable(table);
   };
 
+  // Features
+  const Feature = Features?.[query];
+
+  const searchParams = useSearchParams();
+
+  const tableParams = searchParams.get("table");
+
+  if (tableParams) {
+    return (
+      <main className="dark:bg-black dark:text-white">
+        <SelectedTable selectedTable={tableParams} />
+      </main>
+    );
+  }
+
+  if (Feature) {
+    return (
+      <main className="dark:bg-black dark:text-white h-screen">
+        <Feature setQuery={setQuery} />
+      </main>
+    );
+  }
+
   if (selectedTable) {
     return (
       <main className="dark:bg-black dark:text-white">
@@ -53,6 +79,15 @@ export default function TablesList() {
       return false;
     }
     return name?.toLowerCase()?.includes(query?.toLowerCase());
+  });
+
+  const filteredFeatures = features.filter((feature) => {
+    if (!query) {
+      return false;
+    }
+    return JSON.stringify(feature)
+      ?.toLowerCase()
+      ?.includes(query?.toLowerCase());
   });
 
   return (
@@ -70,6 +105,22 @@ export default function TablesList() {
               key={tableName}
               tableName={tableName}
               addSelectedTable={addSelectedTable}
+            />
+          );
+        })}
+      </section>
+      <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
+        {filteredFeatures?.map((feature: Feature) => {
+          return (
+            <TableItem
+              key={feature?.id}
+              tableName={feature?.title}
+              addSelectedTable={(featureTitle) => {
+                const feature = features?.find(
+                  (feature) => feature.title === featureTitle
+                );
+                feature?.id && setQuery(feature?.id);
+              }}
             />
           );
         })}

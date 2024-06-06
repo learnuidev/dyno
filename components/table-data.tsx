@@ -16,6 +16,7 @@ export const TableData = ({ selectedTable }: { selectedTable: string }) => {
         <DynamoDBTable
           TableName={selectedTable}
           tableDescription={tableInfo}
+          // Items={smartData}
           Items={scannedData}
           isLoading={isLoading && isInfoLoading}
         />

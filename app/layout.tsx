@@ -6,6 +6,8 @@ import { ReactQueryProvider } from "@/components/react-query-provider";
 import { cn } from "@/lib/utils";
 import { Suspense } from "react";
 
+import "../lib/font-awesome/init";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

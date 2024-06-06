@@ -281,21 +281,52 @@ export function DynamoDBTableV3(props: any) {
   );
 
   return (
-    <div className="">
+    <div className="w-full">
       {/* <TableAttributes table={table} /> */}
-      <section className="h-12 space-x-4 px-2">
+      <section className="h-16 px-2 grid grid-cols-3 w-full justify-between items-center">
         <div className="flex space-x-2 items-center">
           <Icons.magnifyingGlass className="text-white" />
           <input
             //   value={attribute}
+            placeholder="how can i help"
             onChange={(e) => {
               setQuery(e.target.value);
               debouncedSearch(e.target.value);
             }}
-            placeholder="how can i help"
-            className="h-10 placeholder:text-gray-400 bg-black outline-none"
+            autoFocus
+            className="h-10 placeholder:text-gray-400 bg-black outline-none font-extralight"
           />
         </div>
+
+        <h1 className="hidden md:block text-xs text-gray-400 truncate font-extralight">
+          {props?.TableName}
+        </h1>
+
+        <div className="flex space-x-6 items-center ml-32 md:ml-40 lg:ml-80">
+          <button
+            onClick={() => {
+              setQuery("");
+            }}
+          >
+            <Icons.table />
+          </button>
+          <button
+            onClick={() => {
+              setQuery("compare");
+            }}
+          >
+            <Icons.sync />
+          </button>
+          <button>
+            <Icons.join />
+          </button>
+        </div>
+      </section>
+
+      <section className="block md:hidden">
+        <h1 className="text-xs text-gray-400 truncate font-extralight">
+          {props?.TableName}
+        </h1>
       </section>
       {/* <TableFilters
         attribute={attribute}

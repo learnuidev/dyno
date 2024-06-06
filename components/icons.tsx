@@ -3,7 +3,12 @@ import {
   FontAwesomeIconProps,
 } from "@fortawesome/react-fontawesome";
 
-import { faMagnifyingGlass } from "@fortawesome/pro-thin-svg-icons";
+import {
+  faMagnifyingGlass,
+  faObjectIntersect,
+  faRotate,
+  faTable,
+} from "@fortawesome/pro-thin-svg-icons";
 
 const createIcon = (icon: FontAwesomeIconProps["icon"]) => {
   const Icon = (props: any) => {
@@ -15,4 +20,7 @@ const createIcon = (icon: FontAwesomeIconProps["icon"]) => {
 
 export const Icons = {
   magnifyingGlass: createIcon(faMagnifyingGlass),
+  sync: createIcon(faRotate),
+  join: createIcon(faObjectIntersect),
+  table: createIcon(faTable),
 };

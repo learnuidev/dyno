@@ -27,10 +27,8 @@ export const CompareTables = (props: {
             </h1>
           </section>
 
-          <section>
-            <code>
-              <pre>{JSON.stringify(results.added, null, 2)}</pre>
-            </code>
+          <section className="mx-32 my-8">
+            {JSON.stringify(results.added, null, 2)}
           </section>
 
           <section className="mt-8">

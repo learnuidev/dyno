@@ -27,9 +27,9 @@ export const CompareTables = (props: {
             </h1>
           </section>
 
-          <section className="mx-32 my-8">
+          {/* <section className="mx-32 my-8">
             {JSON.stringify(results.added, null, 2)}
-          </section>
+          </section> */}
 
           <section className="mt-8">
             <button

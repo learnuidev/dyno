@@ -8,6 +8,7 @@ import {
   faObjectIntersect,
   faRotate,
   faTable,
+  faXmark,
 } from "@fortawesome/pro-thin-svg-icons";
 
 const createIcon = (icon: FontAwesomeIconProps["icon"]) => {
@@ -23,4 +24,5 @@ export const Icons = {
   sync: createIcon(faRotate),
   join: createIcon(faObjectIntersect),
   table: createIcon(faTable),
+  x: createIcon(faXmark),
 };

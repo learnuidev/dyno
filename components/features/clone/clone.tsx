@@ -1,6 +1,7 @@
 import { useListTables } from "@/components/tables-list";
 import { useState } from "react";
 import { CloneSteps } from "./clone-steps";
+import { Icons } from "@/components/icons";
 
 export const Clone = ({ setQuery }: any) => {
   const { data: tables } = useListTables();
@@ -35,7 +36,7 @@ export const Clone = ({ setQuery }: any) => {
             setQuery("");
           }}
         >
-          x
+          <Icons.x />
         </button>
 
         <h1 className="text-2xl font-extralight">clone</h1>

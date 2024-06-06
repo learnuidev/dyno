@@ -181,54 +181,13 @@ export function DynamoDBTableV3(props: any) {
       return {
         accessorFn: (row: any) => row[name],
         id: name,
-        header: () => <span>{name}</span>,
+        // header: () => <span>{name}</span>,
         cell: MyCell,
         footer: (props: any) => props.column.id,
       };
     });
 
-    return [
-      //   {
-      //     id: "Action",
-      //     header: () => <span>...</span>,
-      //     cell: ({ row }: any) => {
-      //       return (
-      //         <div className="opacity-0 transition-opacity hover:opacity-100 flex justify-around">
-      //           <div>
-      //             <div>
-      //               <button
-      //                 className="dark:text-gray-200 dark:active:bg-zinc-700 dark:hover:bg-zinc-800"
-      //                 onClick={() => {
-      //                   setActiveData(row.original);
-      //                 }}
-      //               >
-      //                 edit
-      //                 {/* <PencilIcon className="dark:text-gray-200 h-3 w-3 dark:bg-gray-900 text-gray-800 hover:text-pink-600 dark:hover:text-pink-600" /> */}
-      //               </button>
-      //             </div>
-      //           </div>
-
-      //           <div>
-      //             <div>
-      //               <button
-      //                 className="dark:text-gray-200 dark:active:bg-zinc-700 dark:hover:bg-zinc-800"
-      //                 onDoubleClick={() => {
-      //                   // table.options.meta?.setDelete(row.original);
-
-      //                   props.deleteItem(row.original);
-      //                 }}
-      //               >
-      //                 delete
-      //                 {/* <TrashIcon className="dark:text-gray-200 h-3 w-3 dark:bg-gray-900 text-gray-800 hover:text-pink-600 dark:hover:text-pink-600" /> */}
-      //               </button>
-      //             </div>
-      //           </div>
-      //         </div>
-      //       );
-      //     },
-      //   },
-      ...cols,
-    ];
+    return [...cols];
   };
 
   const defaultColumns = React.useMemo<ColumnDef<any>[]>(
@@ -324,17 +283,19 @@ export function DynamoDBTableV3(props: any) {
   return (
     <div className="">
       {/* <TableAttributes table={table} /> */}
-      <section className="h-12 space-x-4">
-        <Icons.magnifyingGlass className="text-white" />
-        {/* <input
-          //   value={attribute}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            debouncedSearch(e.target.value);
-          }}
-          placeholder="how can i help"
-          className="h-10 px-2 placeholder:text-gray-400 outline-none"
-        /> */}
+      <section className="h-12 space-x-4 px-2">
+        <div className="flex space-x-2 items-center">
+          <Icons.magnifyingGlass className="text-white" />
+          <input
+            //   value={attribute}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              debouncedSearch(e.target.value);
+            }}
+            placeholder="how can i help"
+            className="h-10 placeholder:text-gray-400 bg-black outline-none"
+          />
+        </div>
       </section>
       {/* <TableFilters
         attribute={attribute}
@@ -366,7 +327,7 @@ export function DynamoDBTableV3(props: any) {
             }}
           >
             <thead className="bg-gray-50 dark:bg-gray-900">
-              {table.getHeaderGroups().map((headerGroup) => (
+              {[table.getHeaderGroups()[1]].map((headerGroup) => (
                 <tr
                   key={headerGroup.id}
                   className="divide-x divide-gray-200 dark:divide-gray-900"

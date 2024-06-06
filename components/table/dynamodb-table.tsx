@@ -16,6 +16,7 @@ import { Compare } from "../features/compare/compare";
 import { useGetTask } from "@/hooks/use-get-task";
 import { Icons } from "../icons";
 import Link from "next/link";
+import { Clone } from "../features/clone/clone";
 
 const constructParams = (params: any) => {
   const removeNull = function removeNull(obj: any) {
@@ -269,6 +270,10 @@ export function DynamoDBTableV3(props: any) {
     ["compare"]?.includes(query?.trim()?.toLowerCase()) ||
     featureType === "compare";
 
+  const isCloneable =
+    ["clone"]?.includes(query?.trim()?.toLowerCase()) ||
+    featureType === "clone";
+
   // if (isComparible) {
   //   return (
   //     <div>
@@ -299,7 +304,7 @@ export function DynamoDBTableV3(props: any) {
           />
         </div>
 
-        <h1 className="hidden md:block text-xs text-gray-400 truncate font-extralight">
+        <h1 className="hidden md:block text-xs text-gray-400 truncate font-extralight text-center">
           {props?.TableName}
         </h1>
 
@@ -318,7 +323,11 @@ export function DynamoDBTableV3(props: any) {
           >
             <Icons.sync />
           </button>
-          <button>
+          <button
+            onClick={() => {
+              setQuery("clone");
+            }}
+          >
             <Icons.join />
           </button>
           <Link href="/">
@@ -350,8 +359,12 @@ export function DynamoDBTableV3(props: any) {
         <div>
           <Compare />
         </div>
-      ) : (
+      ) : isCloneable ? (
         <div>
+          <Clone />
+        </div>
+      ) : (
+        <div className="">
           <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5">
             <table
               {...{
@@ -474,7 +487,7 @@ export function DynamoDBTableV3(props: any) {
             </table>
           </div>
 
-          <div className="w-32"> TODO</div>
+          {/* <div className="w-32"> TODO</div> */}
         </div>
       )}
     </div>

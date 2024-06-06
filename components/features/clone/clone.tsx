@@ -2,10 +2,13 @@ import { useListTables } from "@/components/tables-list";
 import { useState } from "react";
 import { CloneSteps } from "./clone-steps";
 import { Icons } from "@/components/icons";
+import { useGetTableId } from "@/hooks/use-get-table-id";
 
 export const Clone = ({ setQuery }: any) => {
   const { data: tables } = useListTables();
-  const [selectedStepTable, setSelectedTable] = useState("");
+
+  const tableId = useGetTableId();
+  const [selectedStepTable, setSelectedTable] = useState(tableId || "");
   const [newTableNameSync, setNewTableNameSync] = useState("");
   const [newTableName, setNewTableName] = useState("");
   const [attributesSync, setAttributesSync] = useState([]);
@@ -29,18 +32,20 @@ export const Clone = ({ setQuery }: any) => {
 
   return (
     <section className="p-8">
-      <div className="flex items-center justify-between text-gray-600">
-        <button
-          className="text-2xl font-extralight uppercase hover:text-white transition"
-          onClick={() => {
-            setQuery("");
-          }}
-        >
-          <Icons.x />
-        </button>
+      {!tableId && (
+        <div className="flex items-center justify-between text-gray-600">
+          <button
+            className="text-2xl font-extralight uppercase hover:text-white transition"
+            onClick={() => {
+              setQuery("");
+            }}
+          >
+            <Icons.x />
+          </button>
 
-        <h1 className="text-2xl font-extralight">clone</h1>
-      </div>
+          <h1 className="text-2xl font-extralight">clone</h1>
+        </div>
+      )}
 
       <CloneSteps
         newTableName={newTableName}

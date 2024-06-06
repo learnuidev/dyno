@@ -32,7 +32,7 @@ export const NewTableName = (props: any) => {
     <StepItem
       stepNumber={2}
       title="Name your table"
-      description="Please give your table a new name"
+      // description="Please give your table a new name"
     >
       <section className="flex w-full mt-8">
         <FilterTablesInput
@@ -43,7 +43,7 @@ export const NewTableName = (props: any) => {
       </section>
 
       <section className="mt-16">
-        <h1 className="text-xl text-gray-400 text-center"> Suggestions</h1>
+        <h1 className="text-xl text-gray-600 text-center"> Suggestions</h1>
 
         <div className="space-y-2 mt-8">
           {suggestions?.map((suggestion) => (

@@ -14,6 +14,7 @@ import { TableAttributes } from "./table-attributes";
 import { TableFilters } from "./table-filters";
 import { Compare } from "../features/compare/compare";
 import { useGetTask } from "@/hooks/use-get-task";
+import { Icons } from "../icons";
 
 const constructParams = (params: any) => {
   const removeNull = function removeNull(obj: any) {
@@ -321,10 +322,11 @@ export function DynamoDBTableV3(props: any) {
   );
 
   return (
-    <div className="mx-4">
-      <TableAttributes table={table} />
-      <section className="mb-4 space-x-4">
-        <input
+    <div className="">
+      {/* <TableAttributes table={table} /> */}
+      <section className="h-12 space-x-4">
+        <Icons.magnifyingGlass className="text-white" />
+        {/* <input
           //   value={attribute}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -332,7 +334,7 @@ export function DynamoDBTableV3(props: any) {
           }}
           placeholder="how can i help"
           className="h-10 px-2 placeholder:text-gray-400 outline-none"
-        />
+        /> */}
       </section>
       {/* <TableFilters
         attribute={attribute}
@@ -353,7 +355,7 @@ export function DynamoDBTableV3(props: any) {
           <Compare />
         </div>
       ) : (
-        <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+        <div className="overflow-x-auto overflow-y-auto shadow ring-1 ring-black ring-opacity-5">
           <table
             {...{
               className:

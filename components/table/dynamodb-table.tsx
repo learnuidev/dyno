@@ -289,7 +289,7 @@ export function DynamoDBTableV3(props: any) {
           <Icons.magnifyingGlass className="text-white" />
           <input
             //   value={attribute}
-            placeholder="how can i help"
+            // placeholder="how can i help"
             onChange={(e) => {
               setQuery(e.target.value);
               debouncedSearch(e.target.value);

@@ -67,7 +67,7 @@ export const runOp = (props: {
   const newItems = props?.items?.filter((item: any) => {
     const itemVal = item?.[attribute] as any;
 
-    if (["contains", "cont", "inc", "includes"]?.includes(predicate)) {
+    if (["contains", "cont", "inc", "includes", "~"]?.includes(predicate)) {
       return itemVal?.includes(value);
     }
 

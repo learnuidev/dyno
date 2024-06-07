@@ -1,4 +1,7 @@
-import { currentAuthUserQueryId } from "@/domain/auth/auth.queries";
+import {
+  currentAuthUserQueryId,
+  useCurrentAuthUser,
+} from "@/domain/auth/auth.queries";
 import { signOut } from "@/domain/auth/auth.store";
 import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,6 +21,8 @@ export const FilterTablesInput = ({
 }) => {
   const router = useRouter();
 
+  const { data: authUser, isLoading } = useCurrentAuthUser({});
+
   const queryClient = useQueryClient();
   return (
     <div className="flex items-center w-full justify-center">
@@ -30,7 +35,10 @@ export const FilterTablesInput = ({
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             if (
-              ["logout", "log", "so", "signout"]?.includes(query.toLowerCase())
+              ["logout", "log", "so", "signout"]?.includes(
+                query.toLowerCase()
+              ) &&
+              authUser?.jwt
             ) {
               return signOut().then(() => {
                 // setQuery("");
@@ -46,6 +54,8 @@ export const FilterTablesInput = ({
             if (["login"]?.includes(query.toLowerCase())) {
               setQuery("");
               router.push("/login");
+            } else {
+              setQuery("");
             }
 
             console.log(event.key);

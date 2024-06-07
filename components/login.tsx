@@ -55,7 +55,9 @@ export function Login() {
       <div className="min-h-full flex items-start justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
           <div>
-            <Icons.bolt className="dark:text-rose-800 text-rose-500 mx-auto h-12 w-auto" />
+            <div className="flex items-center">
+              <Icons.bolt className="dark:text-rose-800 text-rose-500 mx-auto w-auto" />
+            </div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-200">
               Login
             </h2>

@@ -294,6 +294,51 @@ export function DynamoDBTableV3(props: any) {
     query?.trim()?.toLowerCase()
   );
 
+  const updateOpParser = (ops: string) => {
+    const [clause, updateFn] = ops?.split(", ");
+
+    const [predicateOp, predicarteAttribute, comparisionOp, predicateValue] =
+      clause?.trim()?.split(" ");
+
+    const [setOp, attrAndValue] = updateFn.split(" ");
+
+    const [updateAttr, updateVal] = attrAndValue?.split("=");
+
+    return {
+      predicate: {
+        op: predicateOp,
+        attribute: predicarteAttribute,
+        comparisionOp,
+        value,
+      },
+
+      update: {
+        op: "set",
+        attribute: updateAttr,
+        value: updateVal,
+      },
+    };
+  };
+
+  const dqlParser = (dqlQuery: string) => {
+    const queryExample = `u: when level < 3500, set lang=zh`;
+
+    try {
+      if (dqlQuery?.includes(":")) {
+        const [opName, ops] = dqlQuery?.split(":");
+
+        if (opName === "u") {
+          return updateOpParser(ops);
+        }
+      } else {
+        return updateOpParser(dqlQuery);
+      }
+    } catch (err) {
+      console.log("ERR", err);
+      return {};
+    }
+  };
+
   return (
     <div className="w-full">
       {/* <TableAttributes table={table} /> */}
@@ -303,9 +348,55 @@ export function DynamoDBTableV3(props: any) {
           <input
             //   value={attribute}
             // placeholder="how can i help"
-            onChange={(e) => {
-              setQuery(e.target.value);
-              debouncedSearch(e.target.value);
+            onChange={(event) => {
+              setQuery(event.target.value);
+              debouncedSearch(event.target.value);
+
+              // if (
+              //   "when "?.includes(event?.target.value) ||
+              //   event.target.value?.includes("when")
+              // ) {
+              //   return;
+              // } else {
+              //   setQuery(event.target.value);
+              //   debouncedSearch(event.target.value);
+              // }
+            }}
+            onKeyDown={(event) => {
+              if (event.key === "Escape") {
+                // @ts-ignore
+                event.target.value = "";
+                debouncedSearch("");
+
+                // setQuery("");
+              }
+
+              if (event.key === "Enter") {
+                const dql = dqlParser(query) as any;
+
+                if (dql?.predicate) {
+                  const updatedItems = props.items?.map((value: any) => {
+                    if (value?.level < 4000) {
+                      return {
+                        ...value,
+                        lang: "zh",
+                      };
+                    } else {
+                      return value;
+                    }
+                  });
+
+                  console.log("PROPS", props);
+
+                  console.log("UPDATED ITEMS", updatedItems);
+
+                  if (updatedItems) {
+                    props?.setItems(updatedItems);
+                  }
+                }
+
+                console.log("dql", dql);
+              }
             }}
             autoFocus
             className="h-10 placeholder:text-gray-400 bg-black outline-none font-extralight"
@@ -358,7 +449,7 @@ export function DynamoDBTableV3(props: any) {
           {props?.TableName}
         </h1>
       </section>
-      {/* <TableFilters
+      <TableFilters
         attribute={attribute}
         setAttribute={setAttribute}
         setPredicate={setPredicate}
@@ -367,7 +458,7 @@ export function DynamoDBTableV3(props: any) {
         clearSearch={clearSearch}
         value={value}
         setValue={setValue}
-      /> */}
+      />
       {isSum ? (
         <div>
           <h1>{props.items?.length}</h1>
@@ -478,7 +569,6 @@ export function DynamoDBTableV3(props: any) {
                                 },
                               }}
                               onClick={() => {
-                                console.log(originalVal);
                                 alert(JSON.stringify(originalVal));
                               }}
                             >
@@ -516,7 +606,7 @@ export function DynamoDBTableV3(props: any) {
 }
 
 export function DynamoDBTable(props: any) {
-  const { tableDescription, Items, isLoading } = props;
+  const { tableDescription, Items, isLoading, setItems } = props;
 
   const [queryState, setQueryState] = useState(null);
   const [queryResult, setQueryResult] = useState(null);
@@ -576,6 +666,7 @@ export function DynamoDBTable(props: any) {
               : [queryResult]
             : Items
         }
+        setItems={setItems}
         TableName={props.TableName}
         updateItem={(data: any) => {
           const clonedData = JSON.parse(JSON.stringify(data));

@@ -8,7 +8,7 @@ export const Clone = ({ setQuery }: any) => {
   const { data: tables } = useListTables();
 
   const tableId = useGetTableId();
-  const [selectedStepTable, setSelectedTable] = useState(tableId || "");
+  const [targetTableName, setSelectedTable] = useState(tableId || "");
   const [newTableNameSync, setNewTableNameSync] = useState("");
   const [newTableName, setNewTableName] = useState("");
   const [attributesSync, setAttributesSync] = useState([]);
@@ -53,7 +53,7 @@ export const Clone = ({ setQuery }: any) => {
         setQuery2={setQuery2}
         filteredTableNames={filteredTableNames}
         addSelectedTable={addSelectedTable}
-        selectedStepTable={selectedStepTable}
+        selectedStepTable={targetTableName}
         setNewTableName={setNewTableName}
         setNewTableNameSync={setNewTableNameSync}
         newTableNameSync={newTableNameSync}

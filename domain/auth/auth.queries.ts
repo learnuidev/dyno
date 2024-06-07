@@ -9,6 +9,6 @@ export function useCurrentAuthUser(options = {}) {
     queryKey: [currentAuthUserQueryId],
     queryFn: currentAuthUser,
     ...options,
-    // retry: false,
+    retry: false,
   });
 }

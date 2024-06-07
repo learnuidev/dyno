@@ -11,14 +11,18 @@ import { Feature, features } from "@/lib/features";
 import { Features } from "./features/features";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useGetTask } from "@/hooks/use-get-task";
+import { Authenticated } from "./authenticated";
+import { useCurrentAuthUser } from "@/domain/auth/auth.queries";
+import { DisplayIf } from "./display-if";
 
+export const listTablesQueryId = "list-tables";
 export const useListTables = () => {
-  // const { data: authUser } = useCurrentAuthUser({});
-  const authUser = {
-    jwt: "",
-  };
+  const { data: authUser } = useCurrentAuthUser({});
+  // const authUser = {
+  //   jwt: "",
+  // };
   return useQuery({
-    queryKey: ["list-tables"],
+    queryKey: [listTablesQueryId],
     queryFn: async (): Promise<ListTablesResponse> => {
       const tables = await fetch("/api/list-tables", {
         method: "POST",
@@ -64,7 +68,9 @@ export default function TablesList() {
   if (Feature) {
     return (
       <main className="dark:bg-black dark:text-white h-screen">
-        <Feature setQuery={setQuery} />
+        <Authenticated>
+          <Feature setQuery={setQuery} />
+        </Authenticated>
       </main>
     );
   }
@@ -119,17 +125,19 @@ export default function TablesList() {
         })}
       </section>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
-        {filteredTableNames?.map((tableName: string) => {
-          return (
-            <TableItem
-              key={tableName}
-              tableName={tableName}
-              addSelectedTable={addSelectedTable}
-            />
-          );
-        })}
-      </section>
+      <DisplayIf variant="autenticated">
+        <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
+          {filteredTableNames?.map((tableName: string) => {
+            return (
+              <TableItem
+                key={tableName}
+                tableName={tableName}
+                addSelectedTable={addSelectedTable}
+              />
+            );
+          })}
+        </section>
+      </DisplayIf>
     </main>
   );
 }

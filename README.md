@@ -31,10 +31,11 @@ bun dev
 
 ## Features
 
-0. Search
-1. Clone
-2. Clear
-3. ETL
-4. Dynolog
-5. Integrations (google spreadsheet, airtable)
-6. History
+1. Search
+2. Clone
+3. Compare
+4. Clear [Coming Soon]
+5. ETL [Coming Soon]
+6. Dynolog [Coming Soon]
+7. Integrations (google spreadsheet, airtable etc) [Coming Soon]
+8. History [Coming Soon]

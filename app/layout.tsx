@@ -6,7 +6,12 @@ import { ReactQueryProvider } from "@/components/react-query-provider";
 import { cn } from "@/lib/utils";
 import { Suspense } from "react";
 
-import "../lib/font-awesome/init";
+import "@/libs/cognito/init";
+import "@/libs/cognito/clientInit";
+import { Authenticated } from "@/components/authenticated";
+
+import "../libs/font-awesome/init";
+import { FloatingNavbar } from "@/components/floating-navbar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,6 +38,9 @@ export default function RootLayout({
             >
               {/* {children} */}
               {children}
+
+              <FloatingNavbar />
+              {/* <Authenticated>{children}</Authenticated> */}
             </ThemeProvider>
           </ReactQueryProvider>
         </Suspense>

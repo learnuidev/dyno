@@ -4,6 +4,8 @@ import {
 } from "@fortawesome/react-fontawesome";
 
 import {
+  faBolt,
+  faLock,
   faMagnifyingGlass,
   faObjectIntersect,
   faRotate,
@@ -25,4 +27,6 @@ export const Icons = {
   join: createIcon(faObjectIntersect),
   table: createIcon(faTable),
   x: createIcon(faXmark),
+  lock: createIcon(faLock),
+  bolt: createIcon(faBolt),
 };

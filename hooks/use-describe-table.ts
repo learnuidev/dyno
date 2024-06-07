@@ -1,3 +1,4 @@
+import { useCurrentAuthUser } from "@/domain/auth/auth.queries";
 import { useQuery } from "@tanstack/react-query";
 
 interface DescribeTableResponse {
@@ -69,7 +70,7 @@ export const useDescribeTable = (
   { TableName }: { TableName: string },
   options = {}
 ) => {
-  // const { data: authUser } = useCurrentAuthUser({});
+  const { data: authUser } = useCurrentAuthUser({});
   return useQuery({
     queryKey: ["describe-table", TableName],
     queryFn: async (): Promise<DescribeTableResponse> => {
@@ -79,8 +80,7 @@ export const useDescribeTable = (
           TableName: TableName,
         }),
         headers: {
-          // authorization: authUser?.jwt,
-          authorization: "",
+          authorization: authUser?.jwt,
         },
       });
       return tables.json();

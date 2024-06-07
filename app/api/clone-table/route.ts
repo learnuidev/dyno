@@ -1,4 +1,4 @@
-// import { verifyJwt } from "@/libs/cognito/jwt";
+import { verifyJwt } from "@/libs/cognito/jwt";
 import { createTable } from "@/libs/dynamodb/create-table";
 import { describeTable } from "@/libs/dynamodb/describe-table";
 import { putItem } from "@/libs/dynamodb/put-item";
@@ -16,8 +16,8 @@ export async function POST(req: Request) {
   const headersApi = headers();
 
   const jwtToken = headersApi.get("authorization") || "";
-  //   const isVerified = await verifyJwt(jwtToken, { isAdmin: true });
-  const isVerified = await true;
+  const isVerified = await verifyJwt(jwtToken, { isAdmin: true });
+  // const isVerified = await true;
 
   if (isVerified) {
     const resp = await describeTable({ TableName: TargetTableName });

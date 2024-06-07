@@ -1,4 +1,4 @@
-// import { verifyJwt } from "@/libs/cognito/jwt";
+import { verifyJwt } from "@/libs/cognito/jwt";
 
 import { putItem } from "@/libs/dynamodb/put-item";
 
@@ -12,8 +12,8 @@ export async function POST(req: Request) {
   const headersApi = headers();
 
   const jwtToken = headersApi.get("authorization") || "";
-  //   const isVerified = await verifyJwt(jwtToken, { isAdmin: true });
-  const isVerified = await true;
+  const isVerified = await verifyJwt(jwtToken, { isAdmin: true });
+  // const isVerified = await true;
 
   if (isVerified) {
     try {

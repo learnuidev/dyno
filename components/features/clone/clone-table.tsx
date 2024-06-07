@@ -1,4 +1,5 @@
 import { StepItem } from "@/components/step-item";
+import { useCurrentAuthUser } from "@/domain/auth/auth.queries";
 import { pluck } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
@@ -21,6 +22,7 @@ export const CloneTable = (props: any) => {
   } = props;
 
   const [isCreating, setIsCreating] = useState(false);
+  const { data: authUser } = useCurrentAuthUser({});
 
   const previewItems = scannedData?.map((item: any) => {
     // return item;
@@ -38,6 +40,9 @@ export const CloneTable = (props: any) => {
     const cloneTable = async () => {
       const cloned = await fetch("/api/clone-table", {
         method: "POST",
+        headers: {
+          authorization: authUser?.jwt,
+        },
         body: JSON.stringify({
           Items: previewItems,
           TargetTableName: selectedStepTable,

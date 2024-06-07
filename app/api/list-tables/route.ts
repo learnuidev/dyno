@@ -1,4 +1,4 @@
-// import { verifyJwt } from "@/libs/cognito/jwt";
+import { verifyJwt } from "@/libs/cognito/jwt";
 import { listTables } from "@/libs/dynamodb/list-tables";
 
 import { headers } from "next/headers";
@@ -11,9 +11,9 @@ export async function POST(req: Request) {
 
   const headersApi = headers();
 
-  // const jwtToken = headersApi.get("authorization") || "";
-  //   const isVerified = await verifyJwt(jwtToken, { isAdmin: true });
-  const isVerified = true;
+  const jwtToken = headersApi.get("authorization") || "";
+  const isVerified = await verifyJwt(jwtToken, { isAdmin: true });
+  // const isVerified = true;
 
   if (isVerified) {
     const resp = await listTables();

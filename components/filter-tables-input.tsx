@@ -1,4 +1,9 @@
+import { currentAuthUserQueryId } from "@/domain/auth/auth.queries";
+import { signOut } from "@/domain/auth/auth.store";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { listTablesQueryId } from "./tables-list";
 
 export const FilterTablesInput = ({
   autoFocus = true,
@@ -11,6 +16,9 @@ export const FilterTablesInput = ({
   placeholder?: string;
   setQuery: React.Dispatch<React.SetStateAction<string>>;
 }) => {
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
   return (
     <div className="flex items-center w-full justify-center">
       <input
@@ -21,6 +29,25 @@ export const FilterTablesInput = ({
         }}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
+            if (
+              ["logout", "log", "so", "signout"]?.includes(query.toLowerCase())
+            ) {
+              return signOut().then(() => {
+                // setQuery("");
+                // alert("yo");
+                window.location.reload();
+                //   @ts-ignore
+                queryClient?.invalidateQueries([currentAuthUserQueryId]);
+                //   @ts-ignore
+                queryClient?.refetchQueries([listTablesQueryId]);
+                router.refresh();
+              });
+            }
+            if (["login"]?.includes(query.toLowerCase())) {
+              setQuery("");
+              router.push("/login");
+            }
+
             console.log(event.key);
           }
         }}

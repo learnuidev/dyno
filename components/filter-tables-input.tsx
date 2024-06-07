@@ -33,6 +33,9 @@ export const FilterTablesInput = ({
           setQuery(event.target.value);
         }}
         onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            setQuery("");
+          }
           if (event.key === "Enter") {
             if (
               ["logout", "log", "so", "signout"]?.includes(

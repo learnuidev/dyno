@@ -22,7 +22,7 @@ const logEventParser = (event: any) => {
       type: "start",
       requestId,
       message: eventMessage,
-      event,
+      ...event,
     };
   }
 
@@ -117,5 +117,5 @@ const logEventParser = (event: any) => {
 export const logEventsParser = (events: any) => {
   return events
     .map(logEventParser)
-    ?.sort((a: any, b: any) => b?.eventIdf - a?.eventId);
+    ?.sort((a: any, b: any) => b?.timestamp - a?.timestamp);
 };

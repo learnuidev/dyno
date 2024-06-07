@@ -10,7 +10,6 @@ import { TableItem } from "./table-item";
 import { Feature, features } from "@/lib/features";
 import { Features } from "./features/features";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useGetTask } from "@/hooks/use-get-task";
 import { Authenticated } from "./authenticated";
 import { useCurrentAuthUser } from "@/domain/auth/auth.queries";
 import { DisplayIf } from "./display-if";
@@ -18,11 +17,9 @@ import { DisplayIf } from "./display-if";
 export const listTablesQueryId = "list-tables";
 export const useListTables = () => {
   const { data: authUser } = useCurrentAuthUser({});
-  // const authUser = {
-  //   jwt: "",
-  // };
+
   return useQuery({
-    queryKey: [listTablesQueryId],
+    queryKey: [listTablesQueryId, authUser?.jwt],
     queryFn: async (): Promise<ListTablesResponse> => {
       const tables = await fetch("/api/list-tables", {
         method: "POST",
@@ -35,7 +32,7 @@ export const useListTables = () => {
       });
       return tables.json();
     },
-    // enabled: Boolean(authUser?.jwt),
+    enabled: Boolean(authUser?.jwt),
   });
 };
 

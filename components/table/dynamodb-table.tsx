@@ -19,6 +19,7 @@ import Link from "next/link";
 import { Clone } from "../features/clone/clone";
 import { useListFunctions } from "@/hooks/use-list-functions";
 import { Lambdas } from "./lambdas";
+import { dqlParser, runOp } from "@/libs/dql/dql-parser";
 
 const constructParams = (params: any) => {
   const removeNull = function removeNull(obj: any) {
@@ -111,7 +112,19 @@ export function DynamoDBTableV3(props: any) {
   const { data: functions } = useListFunctions({ TableName: props.TableName });
 
   const onUpdate = (queryStr: string) => {
+    console.log("TODO");
     if (queryStr) {
+      // opps
+
+      const dql = dqlParser(queryStr) as any;
+      console.log("dql parsed", dql);
+
+      if (dql?.attribute) {
+        const newItems = runOp({ ...dql, items: props?.items });
+        setItems(newItems);
+        return null;
+      }
+
       const newItems = props?.items?.filter((item: any) => {
         return JSON.stringify(item)
           ?.toLowerCase()
@@ -137,33 +150,11 @@ export function DynamoDBTableV3(props: any) {
   const [activeData, setActiveData] = React.useState(null);
 
   const runSearch = () => {
-    const newItems = props?.items?.filter((item: any) => {
-      const itemVal = item?.[attribute] as any;
-
-      if (["contains", "cont", "inc", "includes"]?.includes(predicate)) {
-        return itemVal?.includes(value);
-      }
-
-      if (["eq", "equals", "="]?.includes(predicate)) {
-        return itemVal === value;
-      }
-      if (["neq", "not equals", "not="]?.includes(predicate)) {
-        return itemVal !== value;
-      }
-      if (["<", "lt"]?.includes(predicate)) {
-        return parseInt(itemVal) < parseInt(value);
-      }
-      if (["<=", "lte"]?.includes(predicate)) {
-        return parseInt(itemVal) <= parseInt(value);
-      }
-      if ([">", "gt"]?.includes(predicate)) {
-        return parseInt(itemVal) > parseInt(value);
-      }
-      if ([">=", "gte"]?.includes(predicate)) {
-        return parseInt(itemVal) >= parseInt(value);
-      }
-
-      return false;
+    const newItems = runOp({
+      attribute,
+      value,
+      predicate,
+      items: props?.items,
     });
 
     setItems(newItems);
@@ -294,51 +285,6 @@ export function DynamoDBTableV3(props: any) {
     query?.trim()?.toLowerCase()
   );
 
-  const updateOpParser = (ops: string) => {
-    const [clause, updateFn] = ops?.split(", ");
-
-    const [predicateOp, predicarteAttribute, comparisionOp, predicateValue] =
-      clause?.trim()?.split(" ");
-
-    const [setOp, attrAndValue] = updateFn.split(" ");
-
-    const [updateAttr, updateVal] = attrAndValue?.split("=");
-
-    return {
-      predicate: {
-        op: predicateOp,
-        attribute: predicarteAttribute,
-        comparisionOp,
-        value,
-      },
-
-      update: {
-        op: "set",
-        attribute: updateAttr,
-        value: updateVal,
-      },
-    };
-  };
-
-  const dqlParser = (dqlQuery: string) => {
-    const queryExample = `u: when level < 3500, set lang=zh`;
-
-    try {
-      if (dqlQuery?.includes(":")) {
-        const [opName, ops] = dqlQuery?.split(":");
-
-        if (opName === "u") {
-          return updateOpParser(ops);
-        }
-      } else {
-        return updateOpParser(dqlQuery);
-      }
-    } catch (err) {
-      console.log("ERR", err);
-      return {};
-    }
-  };
-
   return (
     <div className="w-full">
       {/* <TableAttributes table={table} /> */}
@@ -386,16 +332,10 @@ export function DynamoDBTableV3(props: any) {
                     }
                   });
 
-                  console.log("PROPS", props);
-
-                  console.log("UPDATED ITEMS", updatedItems);
-
                   if (updatedItems) {
                     props?.setItems(updatedItems);
                   }
                 }
-
-                console.log("dql", dql);
               }
             }}
             autoFocus

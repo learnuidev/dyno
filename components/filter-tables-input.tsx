@@ -51,7 +51,7 @@ export const FilterTablesInput = ({
                 router.refresh();
               });
             }
-            if (["login"]?.includes(query.toLowerCase())) {
+            if (["login"]?.includes(query.toLowerCase()) && !authUser?.jwt) {
               setQuery("");
               router.push("/login");
             } else {

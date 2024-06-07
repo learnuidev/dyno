@@ -119,7 +119,7 @@ export function DynamoDBTableV3(props: any) {
       const dql = dqlParser(queryStr) as any;
       console.log("dql parsed", dql);
 
-      if (dql?.attribute) {
+      if (dql?.attribute && dql?.predicate && dql?.value) {
         const newItems = runOp({ ...dql, items: props?.items });
         setItems(newItems);
         return null;

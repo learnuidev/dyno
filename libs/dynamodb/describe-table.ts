@@ -1,4 +1,3 @@
-import { transformItem } from "./utils/transform-item";
 import { dynamodb } from "./client";
 
 export const maxDuration = 60;

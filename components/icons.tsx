@@ -5,6 +5,7 @@ import {
 
 import {
   faBolt,
+  faLambda,
   faLock,
   faMagnifyingGlass,
   faObjectIntersect,
@@ -29,4 +30,5 @@ export const Icons = {
   x: createIcon(faXmark),
   lock: createIcon(faLock),
   bolt: createIcon(faBolt),
+  lambda: createIcon(faLambda),
 };

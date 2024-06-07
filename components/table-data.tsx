@@ -12,7 +12,7 @@ export const TableData = ({ selectedTable }: { selectedTable: string }) => {
 
   return (
     <section className="h-screen overflow-y-auto">
-      {scannedData?.length && (
+      {scannedData?.length > 0 && (
         <DynamoDBTable
           TableName={selectedTable}
           tableDescription={tableInfo}

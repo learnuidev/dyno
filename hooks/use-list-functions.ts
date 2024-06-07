@@ -1,12 +1,12 @@
 import { useCurrentAuthUser } from "@/domain/auth/auth.queries";
 import { useQuery } from "@tanstack/react-query";
 
-export const useDynamoDBScan = ({ TableName }: { TableName: string }) => {
+export const useListFunctions = ({ TableName }: { TableName: string }) => {
   const { data: authUser } = useCurrentAuthUser({});
   return useQuery({
-    queryKey: ["scan", TableName, authUser?.jwt],
+    queryKey: ["scan", TableName],
     queryFn: async () => {
-      const tables = await fetch("/api/scan", {
+      const lambdas = await fetch("/api/list-functions", {
         method: "POST",
         body: JSON.stringify({
           TableName: TableName,
@@ -15,7 +15,7 @@ export const useDynamoDBScan = ({ TableName }: { TableName: string }) => {
           authorization: authUser?.jwt,
         },
       });
-      return tables.json();
+      return lambdas.json();
     },
     enabled: Boolean(authUser?.jwt),
   });

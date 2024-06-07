@@ -17,6 +17,8 @@ import { useGetTask } from "@/hooks/use-get-task";
 import { Icons } from "../icons";
 import Link from "next/link";
 import { Clone } from "../features/clone/clone";
+import { useListFunctions } from "@/hooks/use-list-functions";
+import { Lambdas } from "./lambdas";
 
 const constructParams = (params: any) => {
   const removeNull = function removeNull(obj: any) {
@@ -105,6 +107,8 @@ export function DynamoDBTableV3(props: any) {
   const [value, setValue] = useState("100");
   //   const { items } = props;
   const [query, setQuery] = useState("");
+
+  const { data: functions } = useListFunctions({ TableName: props.TableName });
 
   const onUpdate = (queryStr: string) => {
     if (queryStr) {
@@ -273,6 +277,10 @@ export function DynamoDBTableV3(props: any) {
   const isCloneable =
     ["clone"]?.includes(query?.trim()?.toLowerCase()) ||
     featureType === "clone";
+  const isLambda =
+    functions?.length > 0 &&
+    (["lambda"]?.includes(query?.trim()?.toLowerCase()) ||
+      featureType === "lambda");
 
   // if (isComparible) {
   //   return (
@@ -330,6 +338,15 @@ export function DynamoDBTableV3(props: any) {
           >
             <Icons.join />
           </button>
+          {functions?.length > 0 && (
+            <button
+              onClick={() => {
+                setQuery("lambda");
+              }}
+            >
+              <Icons.lambda />
+            </button>
+          )}
           <Link href="/">
             <Icons.x />
           </Link>
@@ -362,6 +379,10 @@ export function DynamoDBTableV3(props: any) {
       ) : isCloneable ? (
         <div>
           <Clone />
+        </div>
+      ) : isLambda ? (
+        <div>
+          <Lambdas functions={functions} tableName={props?.TableName} />
         </div>
       ) : (
         <div className="">

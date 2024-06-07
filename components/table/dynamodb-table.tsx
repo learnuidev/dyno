@@ -389,7 +389,7 @@ export function DynamoDBTableV3(props: any) {
           {props?.TableName}
         </h1>
       </section>
-      <TableFilters
+      {/* <TableFilters
         attribute={attribute}
         setAttribute={setAttribute}
         setPredicate={setPredicate}
@@ -398,7 +398,7 @@ export function DynamoDBTableV3(props: any) {
         clearSearch={clearSearch}
         value={value}
         setValue={setValue}
-      />
+      /> */}
       {isSum ? (
         <div>
           <h1>{props.items?.length}</h1>

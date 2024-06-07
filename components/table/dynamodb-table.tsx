@@ -521,7 +521,7 @@ export function DynamoDBTable(props: any) {
     );
   }
 
-  if (!Items.length || !keyAttribute) {
+  if (!Items.length) {
     return (
       <div className="text-center pt-32">
         <h2 className="text-3xl"> Nothing here </h2>

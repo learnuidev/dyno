@@ -17,6 +17,6 @@ export const useDynamoDBScan = ({ TableName }: { TableName: string }) => {
       });
       return tables.json();
     },
-    // enabled: Boolean(authUser?.jwt),
+    enabled: Boolean(authUser?.jwt),
   });
 };

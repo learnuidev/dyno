@@ -46,6 +46,17 @@ export const FloatingNavbar = () => {
                   <Icons.verticalStack className="hover:text-white transition" />
                 )}
               </Link>
+              <Link
+                href="https://docs.dyno.im/deploy"
+                target="_blank"
+                className={`transition ${
+                  routeName === "/deploy"
+                    ? "text-gray-800 dark:text-gray-300"
+                    : "text-gray-200 dark:text-gray-500"
+                } hover:text-gray-700 transition text-xl`}
+              >
+                <Icons.docs className="hover:text-white transition" />
+              </Link>
             </div>
 
             <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover:opacity-40" />

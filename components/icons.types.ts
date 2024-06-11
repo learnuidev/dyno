@@ -11,4 +11,6 @@ export interface IconTypes {
   verticalStackSolid: any;
   photoFilmSolid: any;
   photoFilm: any;
+  docs: any;
+  docsSolid: any;
 }

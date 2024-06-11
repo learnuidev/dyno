@@ -3,6 +3,8 @@ import {
   FileStack,
   FunctionSquare,
   Layers2,
+  Library,
+  LibraryBig,
   Lock,
   MonitorPause,
   MonitorPlay,
@@ -11,8 +13,9 @@ import {
   Table,
   X,
 } from "lucide-react";
+import { IconTypes } from "../icons.types";
 
-export const LucideIcons = {
+export const LucideIcons: IconTypes = {
   magnifyingGlass: Search,
   sync: RefreshCcw,
   join: FileStack,
@@ -23,6 +26,8 @@ export const LucideIcons = {
   lambda: FunctionSquare,
   verticalStack: Layers2,
   verticalStackSolid: Layers2,
-  photoFilmSolid: MonitorPause,
-  photoFilm: MonitorPlay,
+  photoFilmSolid: MonitorPlay,
+  photoFilm: MonitorPause,
+  docs: Library,
+  docsSolid: LibraryBig,
 };

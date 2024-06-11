@@ -3,7 +3,10 @@ import {
   FontAwesomeIconProps,
 } from "@fortawesome/react-fontawesome";
 
-import { faPhotoFilm as faPhotoFilmSolid } from "@fortawesome/sharp-solid-svg-icons";
+import {
+  faPhotoFilm as faPhotoFilmSolid,
+  faBookAtlas as faBookAtlasSolid,
+} from "@fortawesome/sharp-solid-svg-icons";
 
 import {
   faBolt,
@@ -16,8 +19,10 @@ import {
   faRotate,
   faTable,
   faXmark,
+  faBookAtlas,
 } from "@fortawesome/pro-thin-svg-icons";
 import { faRectangleVerticalHistory as faRectangleVerticalHistorySolid } from "@fortawesome/pro-solid-svg-icons";
+import { IconTypes } from "./icons.types";
 
 const createIcon = (icon: FontAwesomeIconProps["icon"]) => {
   const Icon = (props: any) => {
@@ -27,7 +32,7 @@ const createIcon = (icon: FontAwesomeIconProps["icon"]) => {
   return Icon;
 };
 
-export const FontAwesomeIcons = {
+export const FontAwesomeIcons: IconTypes = {
   magnifyingGlass: createIcon(faMagnifyingGlass),
   sync: createIcon(faRotate),
   join: createIcon(faObjectIntersect),
@@ -40,4 +45,6 @@ export const FontAwesomeIcons = {
   verticalStackSolid: createIcon(faRectangleVerticalHistorySolid),
   photoFilmSolid: createIcon(faPhotoFilmSolid),
   photoFilm: createIcon(faPhotoFilm),
+  docs: createIcon(faBookAtlas),
+  docsSolid: createIcon(faBookAtlasSolid),
 };

@@ -37,10 +37,13 @@ export const FilterTablesInput = ({
             setQuery("");
           }
           if (event.key === "Enter") {
+            if (["login"]?.includes(query.toLowerCase()) && !authUser?.jwt) {
+              setQuery("");
+              router.push("/login");
+            }
+
             if (
-              ["logout", "log", "so", "signout"]?.includes(
-                query.toLowerCase()
-              ) &&
+              ["logout", "so", "signout"]?.includes(query.toLowerCase()) &&
               authUser?.jwt
             ) {
               return signOut().then(() => {
@@ -53,10 +56,6 @@ export const FilterTablesInput = ({
                 queryClient?.refetchQueries([listTablesQueryId]);
                 router.refresh();
               });
-            }
-            if (["login"]?.includes(query.toLowerCase()) && !authUser?.jwt) {
-              setQuery("");
-              router.push("/login");
             } else {
               setQuery("");
             }

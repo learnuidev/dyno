@@ -1,13 +1,15 @@
+import { DisplayIf } from "@/components/display-if";
 import { FilterTablesInput } from "@/components/filter-tables-input";
 import { StepItem } from "@/components/step-item";
 import { TableItem } from "@/components/table-item";
+import { useListTables } from "@/components/tables-list";
 
 export const NewTableName = (props: any) => {
   const {
     newTableName,
     query,
     setQuery2,
-    filteredTableNames,
+    // filteredTableNames,
     addSelectedTable,
     selectedStepTable,
     newTableNameSync,
@@ -27,6 +29,15 @@ export const NewTableName = (props: any) => {
     .map((item) => {
       return `${selectedStepTable}-${newTimeStamp}-${item}`;
     });
+
+  const { data: tables } = useListTables();
+
+  const filteredTableNames = tables?.TableNames?.filter((name) => {
+    if (!query) {
+      return false;
+    }
+    return name?.toLowerCase()?.includes(newTableNameSync?.toLowerCase());
+  });
 
   return (
     <StepItem
@@ -58,6 +69,28 @@ export const NewTableName = (props: any) => {
             </div>
           ))}
         </div>
+      </section>
+      <section className="mt-16">
+        <h1 className="text-xl text-gray-600 text-center">
+          {" "}
+          or select existing table
+        </h1>
+
+        <DisplayIf variant="autenticated">
+          <section className="grid grid-cols-1 sm:grid-cols-2 pt-8">
+            {filteredTableNames?.map((tableName: string) => {
+              return (
+                <TableItem
+                  key={tableName}
+                  tableName={tableName}
+                  addSelectedTable={(table) => {
+                    setNewTableName(table);
+                  }}
+                />
+              );
+            })}
+          </section>
+        </DisplayIf>
       </section>
     </StepItem>
   );

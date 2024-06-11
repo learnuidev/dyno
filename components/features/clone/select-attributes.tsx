@@ -28,11 +28,17 @@ export const SelectAttributes = ({
     TableName: selectedStepTable,
   });
 
-  const mandatoryKeys = useGetMandatoryAttributes(selectedStepTable) || [];
+  const mandatoryKeysTarget =
+    useGetMandatoryAttributes(selectedStepTable) || [];
 
   const { data: scannedData, isLoading } = useDynamoDBScan({
     TableName: selectedStepTable,
   });
+
+  const mandatoryKeysNew = useGetMandatoryAttributes(newTableName) || [];
+
+  const mandatoryKeys =
+    mandatoryKeysNew?.length > 0 ? mandatoryKeysNew : mandatoryKeysTarget;
 
   const attributesList = [
     ...(new Set(

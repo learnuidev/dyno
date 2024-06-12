@@ -7,10 +7,16 @@ import React from "react";
 
 import { DisplayIf } from "./display-if";
 import { Icons } from "./icons";
+import { useGetTableId } from "@/hooks/use-get-table-id";
 
 export const FloatingNavbar = () => {
   const routeName = usePathname();
 
+  const tableId = useGetTableId();
+
+  if (tableId) {
+    return null;
+  }
   return (
     <DisplayIf variant="autenticated">
       <div className="flex w-full fixed z-50 bottom-4 transition">

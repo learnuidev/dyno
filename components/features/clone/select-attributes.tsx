@@ -3,6 +3,7 @@ import { StepItem } from "@/components/step-item";
 
 import { useDescribeTable } from "@/hooks/use-describe-table";
 import { useGetMandatoryAttributes } from "@/hooks/use-get-mandatory-attributes";
+import Editor from "@monaco-editor/react";
 
 import { useDynamoDBScan } from "@/hooks/use-scan";
 import { cn } from "@/lib/utils";
@@ -20,7 +21,9 @@ export const SelectAttributes = ({
   attributes,
   setAttributes,
   attributesSync,
+
   setAttributesSync,
+  setAttributesV2,
 }: any) => {
   const [query, setQuery2] = useState("");
 
@@ -59,6 +62,35 @@ export const SelectAttributes = ({
           query={query}
           setQuery={setQuery2}
         />
+      </section>
+
+      <section className="flex w-full mt-8 justify-center items-center">
+        {/* <textarea rows={10} className="sm:w-[640px] w-full" /> */}
+        <Editor
+          height={"20vh"}
+          width={"640px"}
+          className="sm:w-[640px] w-ful"
+          theme="vs-dark"
+          defaultLanguage="json"
+          onChange={(value: any) => {
+            try {
+              setAttributesV2(JSON.parse(value));
+              console.log("VALUE", value);
+            } catch (err) {
+              console.log("error parsing");
+            }
+          }}
+          defaultValue={JSON.stringify([
+            "id",
+            "lang",
+            "level",
+            "group",
+            "input=input|hanzi",
+            "roman=pinyin|roman",
+            "en=en|english",
+          ])}
+        />
+        ;
       </section>
 
       {/* <section>

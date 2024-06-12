@@ -13,6 +13,7 @@ export const Clone = ({ setQuery }: any) => {
   const [newTableName, setNewTableName] = useState("");
   const [attributesSync, setAttributesSync] = useState([]);
   const [attributes, setAttributes] = useState([]);
+  const [attributesV2, setAttributesV2] = useState([]);
   const [preview, setPreview] = useState("review");
 
   const [query, setQuery2] = useState("");
@@ -49,6 +50,8 @@ export const Clone = ({ setQuery }: any) => {
 
       <CloneSteps
         newTableName={newTableName}
+        attributesV2={attributesV2}
+        setAttributesV2={setAttributesV2}
         query={query}
         setQuery2={setQuery2}
         filteredTableNames={filteredTableNames}

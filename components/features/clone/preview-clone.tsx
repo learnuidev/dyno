@@ -5,6 +5,7 @@ import { useGetPrimaryKey } from "@/hooks/use-get-primary-key";
 import { useDynamoDBScan } from "@/hooks/use-scan";
 import { pluck } from "@/lib/utils";
 import { useState } from "react";
+import { listPreviewItems } from "./list-preview-items";
 
 export const PreviewClone = (props: any) => {
   const {
@@ -21,6 +22,7 @@ export const PreviewClone = (props: any) => {
     setAttributes,
     attributesSync,
     setAttributesSync,
+    attributesV2,
   } = props;
   const [isCreating, setIsCreating] = useState(false);
   const [query, setQuery2] = useState("");
@@ -42,21 +44,30 @@ export const PreviewClone = (props: any) => {
     ) as any),
   ]?.filter((item) => !Number.isFinite(parseInt(item)));
 
-  const previewItems = scannedData?.map((item: any) => {
-    // return item;
-    // return attributes;
-    const init = pluck(item, attributes) as any;
+  // const previewItems = scannedData?.map((item: any) => {
+  //   // return item;
+  //   // return attributes;
+  //   const init = pluck(item, attributes) as any;
 
-    return {
-      ...init,
-      id: crypto.randomUUID(),
-      // parentId: init?.[primaryKey],
-    };
+  //   return {
+  //     ...init,
+  //     id: crypto.randomUUID(),
+  //     // parentId: init?.[primaryKey],
+  //   };
+  // });
+
+  const previewItems = listPreviewItems({
+    data: scannedData,
+    attributes,
+    attributesV2: attributesV2,
   });
 
   return (
     <StepItem stepNumber={4} title="Preview">
       <section className="dark:text-white">
+        <code>
+          <pre>{JSON.stringify(attributesV2, null, 2)}</pre>
+        </code>
         <code>
           <pre>{JSON.stringify(previewItems?.[0], null, 2)}</pre>
         </code>

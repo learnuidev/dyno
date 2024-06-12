@@ -9,7 +9,7 @@ import { headers } from "next/headers";
 export const maxDuration = 60;
 
 export async function POST(req: Request) {
-  const { TargetTableName, NewTableName: newName, Items } = await req.json();
+  const { TargetTableName, NewTableName: newName } = await req.json();
 
   const NewTableName = `${newName}`;
 

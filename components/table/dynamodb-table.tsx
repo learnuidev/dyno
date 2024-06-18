@@ -405,7 +405,8 @@ export function DynamoDBTableV3(props: any) {
         </div>
 
         <h1 className="hidden md:block text-xs text-gray-400 truncate font-extralight text-center">
-          {props?.TableName}
+          {props?.TableName} -{" "}
+          {items?.length === 100 ? props?.items?.length : items?.length}
         </h1>
 
         <div className="flex space-x-6 items-center ml-32 md:ml-40 lg:ml-80">

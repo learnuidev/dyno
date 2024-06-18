@@ -142,6 +142,13 @@ export function DynamoDBTableV3(props: any) {
   const [attribute, setAttribute] = useState("level");
   const [predicate, setPredicate] = useState(">");
   const [value, setValue] = useState("100");
+  const [items, setItems] = useState(props.items?.slice(0, 200));
+
+  const titles = [
+    ...(new Set(
+      props.items.map((item: any) => Object.keys(item)).flat()
+    ) as any),
+  ]?.filter((item) => !Number.isFinite(parseInt(item)));
 
   const [item, setItem] = useState(null);
   //   const { items } = props;
@@ -151,6 +158,25 @@ export function DynamoDBTableV3(props: any) {
 
   const onUpdate = (queryStr: string) => {
     console.log("TODO");
+    const attr = queryStr.split("!")?.[1];
+
+    console.log("TITLES", titles);
+    console.log("ATTR", attr);
+
+    console.log("QUERY", queryStr?.split("!"));
+
+    if (queryStr?.includes("!") && titles?.includes(attr)) {
+      console.log("SEARCH");
+      const filteredItems = props.items?.filter((value: any) => {
+        return !value?.[attr];
+      });
+
+      if (filteredItems) {
+        setItems(filteredItems);
+      }
+
+      return null;
+    }
     if (queryStr) {
       // opps
 
@@ -184,7 +210,6 @@ export function DynamoDBTableV3(props: any) {
     400
   );
 
-  const [items, setItems] = useState(props.items?.slice(0, 200));
   const [activeData, setActiveData] = React.useState(null);
 
   const runSearch = () => {
@@ -201,10 +226,6 @@ export function DynamoDBTableV3(props: any) {
   const clearSearch = () => {
     setItems(props?.items);
   };
-
-  const titles = [
-    ...(new Set(items.map((item: any) => Object.keys(item)).flat()) as any),
-  ]?.filter((item) => !Number.isFinite(parseInt(item)));
 
   function MyCell(props: any) {
     const value = props.getValue();

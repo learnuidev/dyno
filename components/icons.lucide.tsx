@@ -13,7 +13,7 @@ import {
   Table,
   X,
 } from "lucide-react";
-import { IconTypes } from "../icons.types";
+import { IconTypes } from "./icons.types";
 
 export const LucideIcons: IconTypes = {
   magnifyingGlass: Search,

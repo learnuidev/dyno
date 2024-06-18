@@ -71,7 +71,10 @@ export const FilterTablesInput = ({
           // 3. font
           "text-2xl font-extralight",
           // 4. Shadow
-          "focus:shadow-sm focus:shadow-rose-400 transition"
+          "focus:shadow-sm focus:shadow-rose-400 transition",
+          // 5. background
+          "bg-gray-100 dark:bg-[rgb(12,13,15)]",
+          "placeholder:text-gray-300 dark:placeholder:text-gray-800"
         )}
         placeholder={placeholder || "how can i help"}
       />

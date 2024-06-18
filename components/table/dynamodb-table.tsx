@@ -21,50 +21,18 @@ import { useListFunctions } from "@/hooks/use-list-functions";
 import { Lambdas } from "./lambdas";
 import { dqlParser, runOp } from "@/libs/dql/dql-parser";
 
-const constructParams = (params: any) => {
-  const removeNull = function removeNull(obj: any) {
-    return Object.fromEntries(
-      Object.entries(obj).filter(([_, v]) => v != null)
-    );
-  };
-
-  const filteredStep = removeNull(params.data);
-
-  const updatedAt = new Date().toISOString();
-
-  const initParam = {
-    TableName: params.TableName,
-    Key: params.Key,
-    ExpressionAttributeNames: {
-      // '#updatedAt': 'updatedAt',
-    },
-    UpdateExpression: "",
-    ExpressionAttributeValues: {},
-    ConditionExpression: `attribute_exists(${Object.keys(params.Key)[0]})`,
-  };
-
-  const updatedItemParams = Object.entries(filteredStep).reduce(
-    (acc, [key, val]) => {
-      return {
-        ...acc,
-        ExpressionAttributeNames: {
-          ...acc.ExpressionAttributeNames,
-          [`#${key}`]: key,
-        },
-        UpdateExpression: acc.UpdateExpression.includes("set")
-          ? `${acc.UpdateExpression}, #${key} = :${key}`
-          : `set #${key} = :${key}`,
-        ExpressionAttributeValues: {
-          ...acc.ExpressionAttributeValues,
-          [`:${key}`]: val,
-        },
-      };
-    },
-    initParam
-  );
-
-  return updatedItemParams;
-};
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Editor } from "@monaco-editor/react";
+import { useSearchParams } from "next/navigation";
+import { constructParams } from "@/libs/dynamodb/utils/construct-params";
+import { useUpdateItemMutation } from "@/domain/dyanmodb/update-item.mutations";
 
 type UserAttribute = {
   Name: string;
@@ -102,10 +70,80 @@ const renderSubComponent = ({ row }: { row: Row<User> }) => {
   );
 };
 
+export const EditItemDialog = ({ item, setItem }: any) => {
+  const [attributesV2, setAttributesV2] = useState([]);
+
+  const searchParams = useSearchParams();
+  const tableName = searchParams.get("table") || "";
+
+  const updateItemMutation = useUpdateItemMutation();
+
+  const isDarkMode = document.children[0].classList?.[0] === "dark";
+
+  return (
+    <Dialog
+      open={Boolean(item)}
+      onOpenChange={() => {
+        setItem(null);
+      }}
+    >
+      <DialogContent className="h-[500px] dark:bg-[rgb(11,12,13)] w-[400px] md:min-w-[800px]">
+        <DialogHeader>
+          <DialogTitle>Edit Item</DialogTitle>
+          <DialogDescription>
+            <section className="flex w-full mt-8 justify-center items-center">
+              {/* <textarea rows={10} className="sm:w-[640px] w-full" /> */}
+              <Editor
+                height={"40vh"}
+                width={"100%"}
+                // className="sm:w-[640px] w-full"
+                theme={isDarkMode ? "vs-dark" : "vs-light"}
+                defaultLanguage="json"
+                onChange={(value: any) => {
+                  try {
+                    setAttributesV2(JSON.parse(value));
+                    console.log("VALUE", value);
+                  } catch (err) {
+                    console.log("error parsing");
+                  }
+                }}
+                defaultValue={JSON.stringify(item, null, 2)}
+              />
+              {/* TODO */}
+            </section>
+
+            <button
+              disabled={updateItemMutation?.isPending}
+              onClick={() => {
+                console.log(
+                  updateItemMutation
+                    .mutateAsync({
+                      TableName: tableName,
+                      attributes: attributesV2,
+                    })
+                    .then((resp) => {
+                      setItem(null);
+                    })
+                  // constructParams({ tableName, attributes: attributesV2 })
+                );
+              }}
+              className="mt-4"
+            >
+              {updateItemMutation?.isPending ? "..." : "Save"}
+            </button>
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export function DynamoDBTableV3(props: any) {
   const [attribute, setAttribute] = useState("level");
   const [predicate, setPredicate] = useState(">");
   const [value, setValue] = useState("100");
+
+  const [item, setItem] = useState(null);
   //   const { items } = props;
   const [query, setQuery] = useState("");
 
@@ -287,10 +325,12 @@ export function DynamoDBTableV3(props: any) {
 
   return (
     <div className="w-full">
+      <EditItemDialog item={item} setItem={setItem} />
+
       {/* <TableAttributes table={table} /> */}
       <section className="h-16 px-2 grid grid-cols-3 w-full justify-between items-center">
         <div className="flex space-x-2 items-center">
-          <Icons.magnifyingGlass className="text-white" />
+          <Icons.magnifyingGlass className="dark:text-white" />
           <input
             //   value={attribute}
             // placeholder="how can i help"
@@ -339,7 +379,7 @@ export function DynamoDBTableV3(props: any) {
               }
             }}
             autoFocus
-            className="h-10 placeholder:text-gray-400 bg-black outline-none font-extralight"
+            className="h-10 placeholder:text-gray-400 dark:bg-black outline-none font-extralight"
           />
         </div>
 
@@ -509,7 +549,8 @@ export function DynamoDBTableV3(props: any) {
                                 },
                               }}
                               onClick={() => {
-                                alert(JSON.stringify(originalVal));
+                                setItem(originalVal);
+                                // alert(JSON.stringify(originalVal));
                               }}
                             >
                               {/* {flexRender(

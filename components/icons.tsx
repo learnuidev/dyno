@@ -1,7 +1,7 @@
 import { siteConfig } from "@/lib/site-config";
-import { FontAwesomeIcons } from "./font-awesome-icons";
+import { FontAwesomeIcons } from "./icons.font-awesome";
 
-import { LucideIcons } from "./lucide-icons";
+import { LucideIcons } from "./icons.lucide";
 
 // Note to self: use dynamic imports when you figure out how to
 export const Icons = (() => {

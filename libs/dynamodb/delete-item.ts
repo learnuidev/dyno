@@ -1,7 +1,4 @@
 import { dynamoDocumentClient } from "./client";
-import { constructParams } from "./utils/construct-params";
-
-export const maxDuration = 60;
 
 export async function deleteItem({
   TableName,
@@ -19,5 +16,5 @@ export async function deleteItem({
     })
     .promise();
 
-  return Response.json({ ...item, deletedAt: Date.now() });
+  return { ...item, id, deletedAt: Date.now() };
 }

@@ -9,9 +9,6 @@ import {
   getExpandedRowModel,
   Row,
 } from "@tanstack/react-table";
-import { cn } from "@/lib/utils";
-import { TableAttributes } from "./table-attributes";
-import { TableFilters } from "./table-filters";
 import { Compare } from "../features/compare/compare";
 import { useGetTask } from "@/hooks/use-get-task";
 import { Icons } from "../icons";
@@ -27,12 +24,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Editor } from "@monaco-editor/react";
 import { useSearchParams } from "next/navigation";
-import { constructParams } from "@/libs/dynamodb/utils/construct-params";
-import { useUpdateItemMutation } from "@/domain/dyanmodb/update-item.mutations";
+import { useUpdateItemMutation } from "@/domain/dyanmodb/update-item-mutation";
+import { useDeleteItemMutation } from "@/domain/dyanmodb/delete-item-mutation";
 
 type UserAttribute = {
   Name: string;
@@ -70,13 +66,20 @@ const renderSubComponent = ({ row }: { row: Row<User> }) => {
   );
 };
 
-export const EditItemDialog = ({ item, setItem }: any) => {
+export const EditItemDialog = ({
+  item,
+  setItem,
+}: {
+  item: any;
+  setItem: any;
+}) => {
   const [attributesV2, setAttributesV2] = useState([]);
 
   const searchParams = useSearchParams();
   const tableName = searchParams.get("table") || "";
 
   const updateItemMutation = useUpdateItemMutation();
+  const deleteItemMutation = useDeleteItemMutation();
 
   const isDarkMode = document.children[0].classList?.[0] === "dark";
 
@@ -87,22 +90,19 @@ export const EditItemDialog = ({ item, setItem }: any) => {
         setItem(null);
       }}
     >
-      <DialogContent className="h-[500px] dark:bg-[rgb(11,12,13)] w-[400px] md:min-w-[800px]">
+      <DialogContent className="h-[470px] dark:bg-[rgb(11,12,13)] w-[400px] md:min-w-[800px]">
         <DialogHeader>
           <DialogTitle>Edit Item</DialogTitle>
           <DialogDescription>
             <section className="flex w-full mt-8 justify-center items-center">
-              {/* <textarea rows={10} className="sm:w-[640px] w-full" /> */}
               <Editor
                 height={"40vh"}
                 width={"100%"}
-                // className="sm:w-[640px] w-full"
                 theme={isDarkMode ? "vs-dark" : "vs-light"}
                 defaultLanguage="json"
                 onChange={(value: any) => {
                   try {
                     setAttributesV2(JSON.parse(value));
-                    console.log("VALUE", value);
                   } catch (err) {
                     console.log("error parsing");
                   }
@@ -112,25 +112,44 @@ export const EditItemDialog = ({ item, setItem }: any) => {
               {/* TODO */}
             </section>
 
-            <button
-              disabled={updateItemMutation?.isPending}
-              onClick={() => {
-                console.log(
-                  updateItemMutation
-                    .mutateAsync({
-                      TableName: tableName,
-                      attributes: attributesV2,
-                    })
-                    .then((resp) => {
-                      setItem(null);
-                    })
-                  // constructParams({ tableName, attributes: attributesV2 })
-                );
-              }}
-              className="mt-4"
-            >
-              {updateItemMutation?.isPending ? "..." : "Save"}
-            </button>
+            <div className="space-x-4">
+              <button
+                disabled={updateItemMutation?.isPending}
+                onClick={() => {
+                  console.log(
+                    updateItemMutation
+                      .mutateAsync({
+                        TableName: tableName,
+                        attributes: attributesV2,
+                      })
+                      .then((resp) => {
+                        setItem(null);
+                      })
+                  );
+                }}
+                className="mt-4"
+              >
+                {updateItemMutation?.isPending ? "..." : "Save"}
+              </button>
+              <button
+                disabled={deleteItemMutation?.isPending}
+                onClick={() => {
+                  console.log(
+                    deleteItemMutation
+                      .mutateAsync({
+                        TableName: tableName,
+                        id: item?.id,
+                      })
+                      .then((resp) => {
+                        setItem(null);
+                      })
+                  );
+                }}
+                className="mt-4"
+              >
+                {updateItemMutation?.isPending ? "..." : "Delete"}
+              </button>
+            </div>
           </DialogDescription>
         </DialogHeader>
       </DialogContent>
@@ -151,7 +170,6 @@ export function DynamoDBTableV3(props: any) {
   ]?.filter((item) => !Number.isFinite(parseInt(item)));
 
   const [item, setItem] = useState(null);
-  //   const { items } = props;
   const [query, setQuery] = useState("");
 
   const { data: functions } = useListFunctions({ TableName: props.TableName });

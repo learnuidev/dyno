@@ -33,7 +33,6 @@ export const verifyJwt = async (
 
   try {
     const payload = (await verifier.verify(token)) as any;
-    console.log("Token is valid. Payload:", payload);
 
     if (options?.isAdmin) {
       return adminEmails?.includes(payload?.email);
@@ -41,7 +40,6 @@ export const verifyJwt = async (
 
     return true;
   } catch {
-    console.log("Token not valid!");
     return false;
   }
 };

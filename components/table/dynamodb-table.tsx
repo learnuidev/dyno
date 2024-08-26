@@ -133,7 +133,7 @@ export const EditItemDialog = ({
               </button>
               <button
                 disabled={deleteItemMutation?.isPending}
-                onClick={() => {
+                onDoubleClick={() => {
                   console.log(
                     deleteItemMutation
                       .mutateAsync({
